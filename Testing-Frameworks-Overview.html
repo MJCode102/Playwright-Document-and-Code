@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing Frameworks and Tools Overview</title>
+    <style>
+        body {
+            font-family: 'Calibri', 'Arial', sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            font-size: 28px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 5px;
+            font-size: 22px;
+        }
+        h3 {
+            color: #555;
+            margin-top: 25px;
+            font-size: 18px;
+        }
+        h4 {
+            color: #666;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        p {
+            margin: 10px 0;
+            text-align: justify;
+        }
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        li {
+            margin: 8px 0;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        pre {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        pre code {
+            background-color: transparent;
+            padding: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .toc {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .toc ol {
+            margin: 0;
+        }
+        .highlight {
+            background-color: #fff3cd;
+            padding: 2px 4px;
+        }
+        .checkmark {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .cross {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .info-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        hr {
+            border: none;
+            border-top: 2px solid #ecf0f1;
+            margin: 30px 0;
+        }
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #ecf0f1;
+            font-style: italic;
+            color: #7f8c8d;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Testing Frameworks and Tools Overview</h1>
+
+<div class="info-box">
+    <p><strong>Document Version:</strong> 1.0</p>
+    <p><strong>Date:</strong> 2026-01-13</p>
+    <p><strong>Purpose:</strong> Quick reference guide for testing frameworks and tools used in the codebase</p>
+</div>
+
+<div class="toc">
+    <h2>Table of Contents</h2>
+    <ol>
+        <li><a href="#axios">Axios - HTTP Client Library</a></li>
+        <li><a href="#jest">Jest - JavaScript Testing Framework</a></li>
+        <li><a href="#jest-axios">Jest with Axios</a></li>
+        <li><a href="#chai">Chai - Assertion Library</a></li>
+        <li><a href="#mocha">Mocha - Test Runner</a></li>
+        <li><a href="#other-tools">Other Testing Tools</a></li>
+        <li><a href="#comparison">Framework Comparison</a></li>
+        <li><a href="#locations">Project Locations</a></li>
+    </ol>
+</div>
+
+<hr>
+
+<h2 id="axios">Axios</h2>
+
+<h3>What is Axios?</h3>
+
+<p><strong>Axios</strong> is a popular, promise-based HTTP client library for JavaScript and Node.js. It is used to make HTTP requests to REST APIs.</p>
+
+<h3>Key Features</h3>
+
+<ul>
+    <li><span class="checkmark">✅</span> Promise-based API (works with async/await)</li>
+    <li><span class="checkmark">✅</span> Automatic JSON data transformation</li>
+    <li><span class="checkmark">✅</span> Request and response interceptors</li>
+    <li><span class="checkmark">✅</span> Built-in request/response transformation</li>
+    <li><span class="checkmark">✅</span> Client-side and server-side support</li>
+    <li><span class="checkmark">✅</span> Automatic request body serialization</li>
+    <li><span class="checkmark">✅</span> Request timeout support</li>
+    <li><span class="checkmark">✅</span> Automatic error handling</li>
+</ul>
+
+<h3>Versions Used in Codebase</h3>
+
+<ul>
+    <li><strong>Version Range:</strong> 1.6.0 - 1.11.0</li>
+    <li><strong>Most Common:</strong> 1.7.2</li>
+</ul>
+
+<h3>Usage Examples</h3>
+
+<pre><code>// Basic GET request
+const response = await axios.get('https://api.example.com/users');
+
+// POST request with data
+const response = await axios.post('https://api.example.com/users', {
+  name: 'John Doe',
+  email: 'john@example.com'
+});
+
+// With configuration
+const response = await axios({
+  method: 'POST',
+  url: '/api/users',
+  baseURL: 'https://api.example.com',
+  headers: {
+    'Authorization': 'Bearer token123',
+    'Content-Type': 'application/json'
+  },
+  data: { name: 'John Doe' },
+  timeout: 5000
+});</code></pre>
+
+<h3>Where Axios is Used</h3>
+
+<ul>
+    <li>API automation frameworks</li>
+    <li>Test suites for REST API endpoints</li>
+    <li>Backend services (NestJS applications)</li>
+    <li>Integration with Jest, Mocha, and other testing frameworks</li>
+</ul>
+
+<hr>
+
+<h2 id="jest">Jest</h2>
+
+<h3>What is Jest?</h3>
+
+<p><strong>Jest</strong> is a JavaScript testing framework developed by Facebook. It provides a complete testing solution with built-in assertions, mocking, code coverage, and test running capabilities.</p>
+
+<h3>Key Features</h3>
+
+<ul>
+    <li><span class="checkmark">✅</span> Built-in assertion library (no need for separate assertion library)</li>
+    <li><span class="checkmark">✅</span> Powerful mocking capabilities</li>
+    <li><span class="checkmark">✅</span> Code coverage reports (built-in)</li>
+    <li><span class="checkmark">✅</span> Snapshot testing</li>
+    <li><span class="checkmark">✅</span> Parallel test execution</li>
+    <li><span class="checkmark">✅</span> Watch mode for development</li>
+    <li><span class="checkmark">✅</span> Excellent async/await support</li>
+    <li><span class="checkmark">✅</span> TypeScript support (with ts-jest)</li>
+</ul>
+
+<h3>Versions Used in Codebase</h3>
+
+<ul>
+    <li><strong>Version:</strong> 29.7.0</li>
+    <li><strong>TypeScript Support:</strong> ts-jest 29.1.2</li>
+</ul>
+
+<h3>Jest Configuration Example</h3>
+
+<pre><code>{
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": ["**/tests/**/*.spec.js"],
+    "testTimeout": 60000,
+    "collectCoverageFrom": [
+      "framework/**/*.js",
+      "utility/**/*.js"
+    ]
+  }
+}</code></pre>
+
+<h3>Common Jest Assertions</h3>
+
+<pre><code>// Equality
+expect(value).toBe(4);
+expect(value).toEqual({ name: 'John' });
+
+// Truthiness
+expect(value).toBeTruthy();
+expect(value).toBeFalsy();
+
+// Arrays
+expect(array).toContain(item);
+expect(array).toHaveLength(3);
+
+// Async
+await expect(promise).resolves.toBe(value);
+await expect(promise).rejects.toThrow();</code></pre>
+
+<hr>
+
+<h2 id="jest-axios">Jest with Axios</h2>
+
+<h3>Overview</h3>
+
+<p><strong>Jest + Axios</strong> is a popular combination for API testing. Jest provides the test framework, while Axios handles HTTP requests.</p>
+
+<h3>Implementation Locations</h3>
+
+<h4>1. Jest API Framework (<code>test-general/Jest_API_Framework/</code>)</h4>
+
+<p><strong>Features:</strong></p>
+<ul>
+    <li>Complete API automation framework</li>
+    <li>Keycloak authentication integration</li>
+    <li>Allure reporting integration</li>
+    <li>Excel keyword-driven testing support</li>
+    <li>Automatic API call logging to Allure</li>
+    <li>Base client architecture with interceptors</li>
+</ul>
+
+<p><strong>Key Components:</strong></p>
+<ul>
+    <li><code>src/common/requestHelper.js</code> - Axios request wrapper</li>
+    <li><code>src/clients/baseClient.js</code> - Base client with Axios instance</li>
+    <li><code>src/config/jest.setup.js</code> - Global Axios interceptors for Allure logging</li>
+</ul>
+
+<p><strong>Package Dependencies:</strong></p>
+<pre><code>{
+  "dependencies": {
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "allure-jest": "^2.1.0"
+  }
+}</code></pre>
+
+<h4>2. Framework Approach 2 - JavaScript (Jest + Axios)</h4>
+
+<p><strong>Location:</strong> <code>Project-AI/Project01- Non-Postman/DTC Execution/DTC-32 - nonPostman/Framework Approach 2 - JavaScript (Jest + Axios)/</code></p>
+
+<p><strong>Features:</strong></p>
+<ul>
+    <li>Pure JavaScript implementation</li>
+    <li>ES Modules support</li>
+    <li>Built-in Jest assertions (no Chai needed)</li>
+    <li>Axios for HTTP requests</li>
+    <li>Test coverage reporting</li>
+</ul>
+
+<p><strong>Test Scripts:</strong></p>
+<pre><code>{
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:functional": "node --experimental-vm-modules node_modules/jest/bin/jest.js tests/functional",
+    "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage"
+  }
+}</code></pre>
+
+<h4>3. Framework Approach 3 - TypeScript (TypeScript + Jest + Axios)</h4>
+
+<p><strong>Location:</strong> <code>Project-AI/Project01- Non-Postman/DTC Execution/DTC-32 - nonPostman/Framework Approach 3 - TypeScript (TypeScript + Jest + Axios)/</code></p>
+
+<p><strong>Features:</strong></p>
+<ul>
+    <li>TypeScript implementation</li>
+    <li>Type safety</li>
+    <li>ts-jest for TypeScript support</li>
+    <li>Same Jest + Axios pattern with type checking</li>
+</ul>
+
+<p><strong>Configuration:</strong></p>
+<pre><code>{
+  "jest": {
+    "preset": "ts-jest/presets/default-esm",
+    "extensionsToTreatAsEsm": [".ts"],
+    "transform": {
+      "^.+\\.ts$": ["ts-jest", { "useESM": true }]
+    }
+  }
+}</code></pre>
+
+<h3>Advantages of Jest + Axios</h3>
+
+<ol>
+    <li><strong>No External Assertion Library Needed</strong> - Jest has built-in assertions</li>
+    <li><strong>Better Mocking</strong> - Jest's mocking is more powerful than Mocha's</li>
+    <li><strong>Faster Execution</strong> - Parallel test execution by default</li>
+    <li><strong>Better Developer Experience</strong> - Watch mode, better error messages</li>
+    <li><strong>Code Coverage</strong> - Built-in coverage reports</li>
+    <li><strong>Snapshot Testing</strong> - Test API responses with snapshots</li>
+</ol>
+
+<hr>
+
+<h2 id="chai">Chai</h2>
+
+<h3>What is Chai?</h3>
+
+<p><strong>Chai</strong> is a BDD/TDD assertion library for Node.js and browsers. It provides three assertion styles: <code>assert</code>, <code>expect</code>, and <code>should</code>.</p>
+
+<h3>Key Features</h3>
+
+<ul>
+    <li><span class="checkmark">✅</span> Three assertion styles (assert, expect, should)</li>
+    <li><span class="checkmark">✅</span> Chainable language constructs</li>
+    <li><span class="checkmark">✅</span> Extensive plugin ecosystem</li>
+    <li><span class="checkmark">✅</span> Works with any test runner (Mocha, Jest, etc.)</li>
+    <li><span class="checkmark">✅</span> Browser and Node.js support</li>
+</ul>
+
+<h3>Versions Used in Codebase</h3>
+
+<ul>
+    <li><strong>Version:</strong> 4.4.1</li>
+</ul>
+
+<h3>Chai Assertion Styles</h3>
+
+<h4>Assert Style</h4>
+<pre><code>const assert = require('chai').assert;
+assert.equal(value, 4);
+assert.typeOf(value, 'string');
+assert.property(obj, 'name');</code></pre>
+
+<h4>Expect Style (Most Common)</h4>
+<pre><code>const expect = require('chai').expect;
+expect(value).to.equal(4);
+expect(value).to.be.a('string');
+expect(obj).to.have.property('name');
+expect(array).to.include(3);</code></pre>
+
+<h4>Should Style</h4>
+<pre><code>const should = require('chai').should();
+value.should.equal(4);
+value.should.be.a('string');
+obj.should.have.property('name');</code></pre>
+
+<h3>Where Chai is Used</h3>
+
+<ul>
+    <li><strong>Framework Approach 1</strong> - Mocha + Chai + Axios combinations</li>
+    <li>Various Mocha-based test suites</li>
+    <li>Legacy test frameworks</li>
+</ul>
+
+<hr>
+
+<h2 id="mocha">Mocha</h2>
+
+<h3>What is Mocha?</h3>
+
+<p><strong>Mocha</strong> is a feature-rich JavaScript test framework running on Node.js and in the browser. It provides a flexible testing structure and works with any assertion library.</p>
+
+<h3>Key Features</h3>
+
+<ul>
+    <li><span class="checkmark">✅</span> Flexible and simple</li>
+    <li><span class="checkmark">✅</span> Works with any assertion library (Chai, Should.js, etc.)</li>
+    <li><span class="checkmark">✅</span> Sequential test execution (useful for dependent tests)</li>
+    <li><span class="checkmark">✅</span> Rich hooks (before, after, beforeEach, afterEach)</li>
+    <li><span class="checkmark">✅</span> Async support (callbacks, promises, async/await)</li>
+    <li><span class="checkmark">✅</span> Multiple reporters (spec, dot, json, etc.)</li>
+    <li><span class="checkmark">✅</span> Mature and stable ecosystem</li>
+</ul>
+
+<h3>Versions Used in Codebase</h3>
+
+<ul>
+    <li><strong>Version Range:</strong> 10.2.0 - 10.7.3</li>
+    <li><strong>Most Common:</strong> 10.7.3</li>
+</ul>
+
+<h3>Mocha Test Structure</h3>
+
+<pre><code>describe('User API Tests', function() {
+  before(function() {
+    // Runs once before all tests
+  });
+
+  beforeEach(function() {
+    // Runs before each test
+  });
+
+  it('should create a user', async function() {
+    const response = await axios.post('/api/users', userData);
+    expect(response.status).to.equal(201);
+  });
+
+  afterEach(function() {
+    // Runs after each test
+  });
+
+  after(function() {
+    // Runs once after all tests
+  });
+});</code></pre>
+
+<h3>Mocha Reporters</h3>
+
+<ul>
+    <li><strong>spec</strong> - Hierarchical spec list</li>
+    <li><strong>dot</strong> - Dots for passing tests</li>
+    <li><strong>json</strong> - JSON output</li>
+    <li><strong>mochawesome</strong> - HTML reports (used in rcs-test project)</li>
+</ul>
+
+<h3>Where Mocha is Used</h3>
+
+<h4>1. Framework Approach 1 - Mocha + Chai + Axios</h4>
+
+<p><strong>Location:</strong> <code>Project-AI/Project01- Non-Postman/DTC Execution/DTC-32 - nonPostman/Framework Approach 1 - JavaScript (Mocha + Chai + Axios)/</code></p>
+
+<p><strong>Stack:</strong></p>
+<ul>
+    <li>Test Runner: Mocha 10.7.3</li>
+    <li>Assertions: Chai 4.4.1</li>
+    <li>HTTP Client: Axios 1.7.2</li>
+</ul>
+
+<p><strong>Features:</strong></p>
+<ul>
+    <li>Sequential test execution</li>
+    <li>Flexible test structure</li>
+    <li>Works with Chai assertions</li>
+    <li>ES Modules support</li>
+</ul>
+
+<h4>2. RCS Test Suite</h4>
+
+<p><strong>Location:</strong> <code>Project-AI/test-formal/rcs-test/</code></p>
+
+<p><strong>Stack:</strong></p>
+<ul>
+    <li>Mocha 10.2.0</li>
+    <li>Mochawesome reporter</li>
+    <li>Axios for API calls</li>
+    <li>Multiple test suites</li>
+</ul>
+
+<p><strong>Package.json:</strong></p>
+<pre><code>{
+  "scripts": {
+    "test": "mocha --reporter mochawesome --reporter-options reportDir=test-results ./**/suite.js"
+  },
+  "devDependencies": {
+    "mocha": "^10.2.0",
+    "mochawesome": "^7.0.1"
+  }
+}</code></pre>
+
+<h3>Advantages of Mocha</h3>
+
+<ol>
+    <li><strong>Flexibility</strong> - Works with any assertion library</li>
+    <li><strong>Sequential Execution</strong> - Tests run one after another (useful for dependent tests)</li>
+    <li><strong>Mature Ecosystem</strong> - Well-established and stable</li>
+    <li><strong>Rich Hooks</strong> - Extensive before/after hooks</li>
+    <li><strong>Multiple Reporters</strong> - Various reporting options</li>
+</ol>
+
+<hr>
+
+<h2 id="other-tools">Other Testing Tools</h2>
+
+<h3>Cypress</h3>
+
+<p><strong>Purpose:</strong> End-to-end testing framework for web applications</p>
+
+<p><strong>Locations:</strong></p>
+<ul>
+    <li><code>test-general/cypress*</code> (multiple Cypress projects)</li>
+    <li><code>test-general/ui-framework/</code></li>
+    <li><code>test-general/CypressIOAutomation/</code></li>
+</ul>
+
+<p><strong>Features:</strong></p>
+<ul>
+    <li>Browser automation</li>
+    <li>Real browser testing</li>
+    <li>Time-travel debugging</li>
+    <li>Automatic waiting</li>
+    <li>Screenshot and video recording</li>
+</ul>
+
+<h3>Playwright</h3>
+
+<p><strong>Purpose:</strong> Modern end-to-end testing framework</p>
+
+<p><strong>Locations:</strong></p>
+<ul>
+    <li><code>test-general/playwright*</code> (multiple Playwright projects)</li>
+    <li><code>test-general/Playwright_API_Automation/</code></li>
+</ul>
+
+<p><strong>Features:</strong></p>
+<ul>
+    <li>Cross-browser testing (Chromium, Firefox, WebKit)</li>
+    <li>API testing capabilities</li>
+    <li>Auto-waiting</li>
+    <li>Network interception</li>
+    <li>Mobile device emulation</li>
+</ul>
+
+<h3>Allure Reporting</h3>
+
+<p><strong>Purpose:</strong> Test reporting framework</p>
+
+<p><strong>Usage:</strong></p>
+<ul>
+    <li>Integrated with Jest API Framework</li>
+    <li>Generates HTML reports</li>
+    <li>Tracks test history</li>
+    <li>Screenshot attachments</li>
+    <li>API call logging</li>
+</ul>
+
+<p><strong>Commands:</strong></p>
+<pre><code>npm run allure:generate  # Generate report
+npm run allure:open      # Open report
+npm run allure:serve     # Serve report</code></pre>
+
+<h3>Newman (Postman Runner)</h3>
+
+<p><strong>Purpose:</strong> Run Postman collections from command line</p>
+
+<p><strong>Usage:</strong></p>
+<ul>
+    <li>Optional in Jest API Framework</li>
+    <li>Converts Postman collections to automated tests</li>
+    <li>Supports Postman environment variables</li>
+</ul>
+
+<h3>TypeScript</h3>
+
+<p><strong>Purpose:</strong> Typed superset of JavaScript</p>
+
+<p><strong>Usage:</strong></p>
+<ul>
+    <li>Framework Approach 3 (TypeScript + Jest + Axios)</li>
+    <li>Backend services (NestJS)</li>
+    <li>Type safety in tests</li>
+    <li>Better IDE support</li>
+</ul>
+
+<p><strong>Tools:</strong></p>
+<ul>
+    <li><code>ts-jest</code> - Jest transformer for TypeScript</li>
+    <li><code>@types/jest</code> - TypeScript definitions for Jest</li>
+    <li><code>@types/node</code> - Node.js type definitions</li>
+</ul>
+
+<h3>NestJS Testing</h3>
+
+<p><strong>Purpose:</strong> Backend framework with built-in testing support</p>
+
+<p><strong>Location:</strong> <code>services/</code> directory</p>
+
+<p><strong>Stack:</strong></p>
+<ul>
+    <li>NestJS framework</li>
+    <li>Jest for testing</li>
+    <li><code>@nestjs/testing</code> package</li>
+    <li>TypeScript</li>
+</ul>
+
+<hr>
+
+<h2 id="comparison">Framework Comparison</h2>
+
+<h3>DTC-32 Framework Approaches</h3>
+
+<p>Based on the DTC-32 project, three framework approaches were implemented:</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Approach</th>
+            <th>Framework Stack</th>
+            <th>Test Runner</th>
+            <th>Assertions</th>
+            <th>Language</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Approach 1</strong></td>
+            <td>Mocha + Chai + Axios</td>
+            <td>Mocha</td>
+            <td>Chai</td>
+            <td>JavaScript</td>
+            <td><span class="checkmark">✅ PASSED</span></td>
+        </tr>
+        <tr>
+            <td><strong>Approach 2</strong></td>
+            <td>Jest + Axios</td>
+            <td>Jest</td>
+            <td>Jest (built-in)</td>
+            <td>JavaScript</td>
+            <td><span class="checkmark">✅ PASSED</span></td>
+        </tr>
+        <tr>
+            <td><strong>Approach 3</strong></td>
+            <td>TypeScript + Jest + Axios</td>
+            <td>Jest</td>
+            <td>Jest (built-in)</td>
+            <td>TypeScript</td>
+            <td><span class="checkmark">✅ PASSED</span></td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>Detailed Comparison</h3>
+
+<h4>Approach 1: Mocha + Chai + Axios</h4>
+
+<p><strong>Pros:</strong></p>
+<ul>
+    <li><span class="checkmark">✅</span> Flexible (works with any assertion library)</li>
+    <li><span class="checkmark">✅</span> Sequential execution (good for dependent tests)</li>
+    <li><span class="checkmark">✅</span> Mature and stable</li>
+    <li><span class="checkmark">✅</span> Rich hooks support</li>
+</ul>
+
+<p><strong>Cons:</strong></p>
+<ul>
+    <li><span class="cross">❌</span> Requires separate assertion library (Chai)</li>
+    <li><span class="cross">❌</span> Slower execution (sequential)</li>
+    <li><span class="cross">❌</span> No built-in mocking</li>
+</ul>
+
+<p><strong>Best For:</strong></p>
+<ul>
+    <li>Legacy projects</li>
+    <li>Tests with dependencies</li>
+    <li>Teams familiar with Mocha</li>
+</ul>
+
+<h4>Approach 2: Jest + Axios</h4>
+
+<p><strong>Pros:</strong></p>
+<ul>
+    <li><span class="checkmark">✅</span> Built-in assertions (no Chai needed)</li>
+    <li><span class="checkmark">✅</span> Powerful mocking capabilities</li>
+    <li><span class="checkmark">✅</span> Faster execution (parallel)</li>
+    <li><span class="checkmark">✅</span> Built-in code coverage</li>
+    <li><span class="checkmark">✅</span> Better developer experience</li>
+</ul>
+
+<p><strong>Cons:</strong></p>
+<ul>
+    <li><span class="cross">❌</span> Less flexible than Mocha</li>
+    <li><span class="cross">❌</span> Parallel execution can cause issues with shared state</li>
+</ul>
+
+<p><strong>Best For:</strong></p>
+<ul>
+    <li>New projects</li>
+    <li>Teams wanting modern tooling</li>
+    <li>Projects needing code coverage</li>
+</ul>
+
+<h4>Approach 3: TypeScript + Jest + Axios</h4>
+
+<p><strong>Pros:</strong></p>
+<ul>
+    <li><span class="checkmark">✅</span> All benefits of Jest + Axios</li>
+    <li><span class="checkmark">✅</span> Type safety</li>
+    <li><span class="checkmark">✅</span> Better IDE support</li>
+    <li><span class="checkmark">✅</span> Compile-time error checking</li>
+    <li><span class="checkmark">✅</span> Better refactoring support</li>
+</ul>
+
+<p><strong>Cons:</strong></p>
+<ul>
+    <li><span class="cross">❌</span> Requires TypeScript knowledge</li>
+    <li><span class="cross">❌</span> Additional compilation step</li>
+    <li><span class="cross">❌</span> More complex setup</li>
+</ul>
+
+<p><strong>Best For:</strong></p>
+<ul>
+    <li>Large projects</li>
+    <li>Teams using TypeScript</li>
+    <li>Projects requiring type safety</li>
+</ul>
+
+<hr>
+
+<h2 id="locations">Project Locations</h2>
+
+<h3>Jest + Axios Projects</h3>
+
+<ol>
+    <li><strong>Jest API Framework</strong>
+        <ul>
+            <li>Path: <code>test-general/Jest_API_Framework/</code></li>
+            <li>Features: Complete framework with Allure, Keycloak, Excel support</li>
+        </ul>
+    </li>
+    <li><strong>Framework Approach 2 (JavaScript)</strong>
+        <ul>
+            <li>Path: <code>Project-AI/Project01- Non-Postman/DTC Execution/DTC-32 - nonPostman/Framework Approach 2 - JavaScript (Jest + Axios)/</code></li>
+            <li>Features: Pure JavaScript, ES Modules</li>
+        </ul>
+    </li>
+    <li><strong>Framework Approach 3 (TypeScript)</strong>
+        <ul>
+            <li>Path: <code>Project-AI/Project01- Non-Postman/DTC Execution/DTC-32 - nonPostman/Framework Approach 3 - TypeScript (TypeScript + Jest + Axios)/</code></li>
+            <li>Features: TypeScript implementation</li>
+        </ul>
+    </li>
+</ol>
+
+<h3>Mocha + Chai + Axios Projects</h3>
+
+<ol>
+    <li><strong>Framework Approach 1</strong>
+        <ul>
+            <li>Path: <code>Project-AI/Project01- Non-Postman/DTC Execution/DTC-32 - nonPostman/Framework Approach 1 - JavaScript (Mocha + Chai + Axios)/</code></li>
+            <li>Features: Mocha test runner with Chai assertions</li>
+        </ul>
+    </li>
+    <li><strong>RCS Test Suite</strong>
+        <ul>
+            <li>Path: <code>Project-AI/test-formal/rcs-test/</code></li>
+            <li>Features: Mocha with Mochawesome reporter</li>
+        </ul>
+    </li>
+    <li><strong>Users API Mock</strong>
+        <ul>
+            <li>Path: <code>Project-AI/Project01- Non-Postman/users-api-mock/</code></li>
+            <li>Features: Mock server with Mocha tests</li>
+        </ul>
+    </li>
+</ol>
+
+<h3>Backend Services (NestJS + Jest)</h3>
+
+<ul>
+    <li><strong>Location:</strong> <code>services/</code> directory</li>
+    <li><strong>Stack:</strong> NestJS + Jest + TypeScript</li>
+    <li><strong>Purpose:</strong> Backend API testing</li>
+</ul>
+
+<hr>
+
+<h2>Quick Reference</h2>
+
+<h3>Installation Commands</h3>
+
+<pre><code># Jest + Axios
+npm install --save-dev jest axios
+npm install --save-dev @types/jest  # For TypeScript
+
+# Mocha + Chai + Axios
+npm install --save-dev mocha chai axios
+
+# Allure (for Jest)
+npm install --save-dev allure-jest allure-commandline</code></pre>
+
+<h3>Running Tests</h3>
+
+<pre><code># Jest
+npm test
+npm run test:watch
+npm run test:coverage
+
+# Mocha
+npm test
+mocha tests/**/*.spec.js
+mocha --reporter mochawesome</code></pre>
+
+<h3>Common Patterns</h3>
+
+<h4>Jest + Axios Pattern</h4>
+<pre><code>const axios = require('axios');
+
+describe('API Tests', () => {
+  test('should get users', async () => {
+    const response = await axios.get('/api/users');
+    expect(response.status).toBe(200);
+    expect(response.data).toHaveLength(10);
+  });
+});</code></pre>
+
+<h4>Mocha + Chai + Axios Pattern</h4>
+<pre><code>const axios = require('axios');
+const expect = require('chai').expect;
+
+describe('API Tests', function() {
+  it('should get users', async function() {
+    const response = await axios.get('/api/users');
+    expect(response.status).to.equal(200);
+    expect(response.data).to.have.lengthOf(10);
+  });
+});</code></pre>
+
+<hr>
+
+<h2>Summary</h2>
+
+<h3>Axios</h3>
+<ul>
+    <li><strong>Purpose:</strong> HTTP client for API requests</li>
+    <li><strong>Versions:</strong> 1.6.0 - 1.11.0</li>
+    <li><strong>Used with:</strong> Jest, Mocha, NestJS</li>
+</ul>
+
+<h3>Jest</h3>
+<ul>
+    <li><strong>Purpose:</strong> Complete testing framework</li>
+    <li><strong>Version:</strong> 29.7.0</li>
+    <li><strong>Features:</strong> Built-in assertions, mocking, coverage</li>
+    <li><strong>Best with:</strong> Axios for API testing</li>
+</ul>
+
+<h3>Chai</h3>
+<ul>
+    <li><strong>Purpose:</strong> Assertion library</li>
+    <li><strong>Version:</strong> 4.4.1</li>
+    <li><strong>Used with:</strong> Mocha (primarily)</li>
+</ul>
+
+<h3>Mocha</h3>
+<ul>
+    <li><strong>Purpose:</strong> Test runner framework</li>
+    <li><strong>Versions:</strong> 10.2.0 - 10.7.3</li>
+    <li><strong>Used with:</strong> Chai + Axios</li>
+    <li><strong>Features:</strong> Flexible, sequential execution</li>
+</ul>
+
+<h3>Recommendation</h3>
+
+<p>For <strong>new projects</strong>, <strong>Jest + Axios</strong> is recommended because:</p>
+<ul>
+    <li>Modern and actively maintained</li>
+    <li>Built-in features (assertions, mocking, coverage)</li>
+    <li>Better developer experience</li>
+    <li>Faster execution</li>
+    <li>TypeScript support</li>
+</ul>
+
+<p>For <strong>existing Mocha projects</strong>, continue using <strong>Mocha + Chai + Axios</strong> as it's stable and well-established.</p>
+
+<hr>
+
+<div class="footer">
+    <p><strong>Document End</strong></p>
+    <p><em>This document provides a quick reference for testing frameworks and tools found in the codebase. For detailed implementation examples, refer to the specific project folders mentioned above.</em></p>
+</div>
+
+</body>
+</html>

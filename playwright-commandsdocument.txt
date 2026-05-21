@@ -1,0 +1,88 @@
+How to Run:
+Option 1: Run in headed mode (see browser)
+cd playwright-json-form-automation
+npx playwright test tests/login-logout.spec.js --headed
+
+Option 2: Run in headless mode
+npx playwright test tests/login-logout.spec.js
+
+Option 3: Run in UI mode (interactive)
+npx playwright test tests/login-logout.spec.js --ui
+
+Option 4: Run in debug mode
+npx playwright test tests/login-logout.spec.js --debug
+
+Option 5: Run only the login-logout test
+npx playwright test tests/login-logout.spec.js -g 					"Should successfully login and logout"
+
+
+*****************************Test Command*****************************
+
+npx playwright test tests/login_spec_ProjectCode.spec.js --ui
+npx playwright test tests/Login_SelfCode-Orchestration.spec.js --ui
+npx playwright test tests/Login_SelfCode-SchemaLibrary.spec.js --ui
+
+
+
+
+
+npx playwright test tests/login.spec.js --debug
+
+
+
+
+
+
+
+class="flex flex-wrap justify-center pa2"
+
+
+
+
+
+class="flex flex-wrap justify-center pa2"
+
+
+class="flex flex-column items-center vw12 pointer"
+
+
+
+
+
+
+Code
+// Enable the orchestration toggle (checkbox)
+    // The element is a checkbox, so use setChecked() or check() instead of selectOption()
+    const toggleCheckbox = page.locator("[name='state']");
+    await toggleCheckbox.waitFor({ state: 'visible' });
+    
+    // Check if already enabled
+    const isChecked = await toggleCheckbox.isChecked();
+    if (!isChecked) {
+        // Enable the checkbox
+        await toggleCheckbox.setChecked(true);
+        // Alternative: await toggleCheckbox.check();
+    }
+    
+    // Verify it's enabled
+    const isEnabled = await toggleCheckbox.isChecked();
+    console.log(`Orchestration state is enabled: ${isEnabled}`);
+	
+	
+http://purl.allotrope.org/json-schemas/adm/core/REC/2021/09/core.schema
+ 
+http://purl.allotrope.org/json-schemas/qudt/REC/2021/09/units.schema
+ 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

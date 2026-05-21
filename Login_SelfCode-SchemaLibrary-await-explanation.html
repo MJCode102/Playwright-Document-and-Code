@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Playwright to Selenium (Java) Mapping - Login &amp; Schema Library</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 2rem;
+      background: #0f172a;
+      color: #e5e7eb;
+    }
+    h1, h2, h3 {
+      color: #38bdf8;
+      margin-top: 1.8rem;
+    }
+    code {
+      background: #111827;
+      padding: 0.1rem 0.25rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      color: #f97316;
+    }
+    pre {
+      background: #020617;
+      padding: 1rem;
+      border-radius: 8px;
+      overflow: auto;
+      border: 1px solid #1f2937;
+    }
+    .section {
+      margin-bottom: 1.8rem;
+      padding: 1rem 1.2rem;
+      border-radius: 8px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid #1f2937;
+    }
+    .mapping-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.75rem;
+      font-size: 0.9rem;
+    }
+    .mapping-table th,
+    .mapping-table td {
+      border: 1px solid #1f2937;
+      padding: 0.55rem 0.6rem;
+      vertical-align: top;
+    }
+    .mapping-table th {
+      background: #020617;
+      color: #e5e7eb;
+    }
+    .tag {
+      display: inline-block;
+      padding: 0.1rem 0.45rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .tag-await { background: #0f766e33; color: #5eead4; border: 1px solid #0f766e; }
+    .tag-wait { background: #1d4ed833; color: #93c5fd; border: 1px solid #1d4ed8; }
+    .tag-action { background: #9f123333; color: #fb7185; border: 1px solid #9f1233; }
+    .note {
+      font-size: 0.85rem;
+      color: #9ca3af;
+      margin-top: 0.4rem;
+    }
+    a {
+      color: #38bdf8;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>Playwright → Selenium (Java) Conversion</h1>
+  <p>
+    This document explains how each important <code>await</code> in
+    <strong>Login_SelfCode-SchemaLibrary.spec.js</strong> maps to Selenium with Java
+    in <code>LoginSelfCodeSchemaLibraryTest.java</code>, focusing on waits and actions.
+    Use this as a talking guide in your interview.
+  </p>
+
+  <div class="section">
+    <h2>1. Login Flow</h2>
+
+    <table class="mapping-table">
+      <thead>
+        <tr>
+          <th>Playwright (JS)</th>
+          <th>Selenium (Java)</th>
+          <th>What to Explain</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <code class="tag tag-await">await</code>
+            <code>page.goto(url)</code>
+          </td>
+          <td>
+            <code>driver.get(url);</code>
+          </td>
+          <td>
+            In Playwright, <code>await</code> waits for navigation to finish.
+            In Selenium, <code>get()</code> is synchronous but we usually add
+            explicit waits for elements we need next instead of sleeping.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <code class="tag tag-await">await</code>
+            <code>page.getByPlaceholder("Email address").fill(...)</code>
+          </td>
+          <td>
+            <code class="tag tag-wait">wait</code>
+            <code>wait.until(visibilityOfElementLocated(...));</code><br />
+            <code class="tag tag-action">action</code>
+            <code>emailInput.sendKeys(...);</code>
+          </td>
+          <td>
+            Playwright auto-waits for the element to be ready before typing.
+            In Selenium we explicitly wait using <code>WebDriverWait</code> +
+            <code>ExpectedConditions.visibilityOfElementLocated</code>, then call
+            <code>sendKeys()</code>.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <code class="tag tag-await">await</code>
+            <code>page.click("button:has-text('Next')")</code>
+          </td>
+          <td>
+            <code>WebElement nextButton = driver.findElement(...);</code><br />
+            <code>nextButton.click();</code>
+          </td>
+          <td>
+            Playwright combines waiting + click. In Selenium, you typically either
+            do a <code>wait.until(elementToBeClickable(...))</code> or rely on the DOM
+            being stable and then call <code>click()</code>. In the sample we show both
+            direct <code>findElement</code> and waited actions.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <code class="tag tag-await">await</code>
+            <code>page.getByPlaceholder("Your password").fill(...)</code><br />
+            <code class="tag tag-await">await</code>
+            <code>page.waitForTimeout(1000)</code>
+          </td>
+          <td>
+            <code>WebElement passwordInput = wait.until(visibilityOfElementLocated(...));</code><br />
+            <code>passwordInput.sendKeys(password);</code>
+          </td>
+          <td>
+            The <code>waitForTimeout</code> is a hard sleep. In Selenium,
+            instead of fixed sleeps, we prefer explicit waits that stop as soon
+            as the element is ready. This is more reliable and faster.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <code class="tag tag-await">await</code>
+            <code>page.click("button:has-text('Sign on')")</code>
+          </td>
+          <td>
+            <code>WebElement signOnButton = driver.findElement(...);</code><br />
+            <code>signOnButton.click();</code>
+          </td>
+          <td>
+            Same idea: Playwright waits internally; Selenium needs either an
+            explicit wait for clickability or relies on the previous waits.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>2. Tenant Selection</h2>
+
+    <table class="mapping-table">
+      <thead>
+        <tr>
+          <th>Playwright</th>
+          <th>Selenium</th>
+          <th>What to Explain</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <code class="tag tag-await">await</code>
+            <code>page.waitForTimeout(1000)</code><br />
+            <code class="tag tag-await">await</code>
+            <code>page.locator('div.pointer', { hasText: 'Schema Tenant 01' }).first().click()</code>
+          </td>
+          <td>
+            <code class="tag tag-wait">wait</code>
+            <code>wait.until(elementToBeClickable(By.xpath("//div[contains(@class,'pointer') and contains(.,'Schema Tenant 01')]")))</code><br />
+            <code class="tag tag-action">action</code>
+            <code>tenantCard.click();</code>
+          </td>
+          <td>
+            Instead of waiting an arbitrary 1 second, Selenium code waits until
+            the specific tenant element is clickable. This is a common pattern
+            to replace <code>waitForTimeout</code>.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>3. Navigate to Schema Library &amp; Import from URL</h2>
+
+    <table class="mapping-table">
+      <thead>
+        <tr>
+          <th>Playwright</th>
+          <th>Selenium</th>
+          <th>What to Explain</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <code class="tag tag-await">await</code>
+            <code>page.getByTestId('dtid_nav_schema_library').click()</code><br />
+            <code class="tag tag-await">await</code>
+            <code>page.getByTestId('dtid_add_schema').click()</code><br />
+            <code class="tag tag-await">await</code>
+            <code>page.getByTestId('dtid_import_from_url_menu_item').click()</code>
+          </td>
+          <td>
+            <code class="tag tag-wait">wait</code>
+            <code>wait.until(elementToBeClickable(By.cssSelector("[data-testid='dtid_nav_schema_library']"))).click();</code><br />
+            <code>wait.until(elementToBeClickable(By.cssSelector("[data-testid='dtid_add_schema']"))).click();</code><br />
+            <code>wait.until(elementToBeClickable(By.cssSelector("[data-testid='dtid_import_from_url_menu_item']"))).click();</code>
+          </td>
+          <td>
+            Each Playwright click is mapped to a Selenium click but preceded
+            by an explicit <code>elementToBeClickable</code> wait, which is
+            the Selenium analogue of Playwright’s built-in auto-waiting.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <code class="tag tag-await">await</code>
+            <code>page.getByTestId("dtid_paste_url_input").getByPlaceholder(...).fill(url)</code><br />
+            <code class="tag tag-await">await</code>
+            <code>page.getByTestId("dtid_paste_url_name_input").getByPlaceholder("Schema Name").fill(schemaName)</code>
+          </td>
+          <td>
+            <code class="tag tag-wait">wait</code>
+            <code>wait.until(visibilityOfElementLocated(By.cssSelector("[data-testid='dtid_paste_url_input'] input[...]")))</code><br />
+            <code class="tag tag-action">action</code>
+            <code>urlInput.sendKeys(...);</code><br />
+            <code class="tag tag-wait">wait</code>
+            <code>wait.until(visibilityOfElementLocated(By.cssSelector("[data-testid='dtid_paste_url_name_input'] input[...]")))</code><br />
+            <code class="tag tag-action">action</code>
+            <code>nameInput.sendKeys(schemaName);</code>
+          </td>
+          <td>
+            Playwright chains locators and auto-waits; Selenium locates the
+            exact <code>&lt;input&gt;</code> via CSS and then uses
+            <code>sendKeys()</code> after a visibility wait.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <code class="tag tag-await">await</code>
+            <code>page.getByTestId('dtid_paste_url_import_button').click()</code><br />
+            <code class="tag tag-await">await</code>
+            <code>page.waitForTimeout(5000)</code>
+          </td>
+          <td>
+            <code>WebElement importButton = driver.findElement(...);</code><br />
+            <code>importButton.click();</code><br />
+            <code class="tag tag-wait">wait</code>
+            <code>new WebDriverWait(driver, Duration.ofSeconds(5)).until(...)</code>
+            (e.g. wait for modal or success message)
+          </td>
+          <td>
+            The Playwright timeout is a hard 5s sleep. In Selenium we normally
+            replace it with a wait for a specific condition (e.g. success toast
+            or modal buttons to appear).
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <code class="tag tag-await">await</code>
+            <code>schemaCancelBtn.isVisible({ timeout: 1000 })</code><br />
+            <code class="tag tag-await">await</code>
+            <code>schemaCancelBtn.click()</code>
+          </td>
+          <td>
+            <code>new WebDriverWait(driver, Duration.ofSeconds(5)).until(visibilityOfElementLocated(...));</code><br />
+            <code>cancelBtn.click();</code>
+          </td>
+          <td>
+            Playwright’s <code>isVisible({ timeout })</code> is conceptually
+            similar to Selenium’s <code>WebDriverWait</code> with
+            <code>visibilityOfElementLocated</code>, followed by a normal
+            <code>click()</code>.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>4. Filtering and Opening the Created Schema</h2>
+
+    <table class="mapping-table">
+      <thead>
+        <tr>
+          <th>Playwright</th>
+          <th>Selenium</th>
+          <th>What to Explain</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <code class="tag tag-await">await</code>
+            <code>page.getByTestId('dtid_nav_schema_library').click()</code><br />
+            <code class="tag tag-await">await</code>
+            <code>filterInput.click()</code>
+          </td>
+          <td>
+            <code>wait.until(elementToBeClickable(By.cssSelector("[data-testid='dtid_nav_schema_library']"))).click();</code><br />
+            <code>WebElement filterCombobox = wait.until(elementToBeClickable(By.cssSelector("[role='combobox']")));</code><br />
+            <code>filterCombobox.click();</code>
+          </td>
+          <td>
+            Again, Playwright’s <code>await</code> wraps waiting + click;
+            Selenium splits it into a wait (clickable) then <code>click()</code>.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <code class="tag tag-await">await</code>
+            <code>page.getByRole('option', { name: 'Schema Name' }).click()</code>
+          </td>
+          <td>
+            <code>WebElement schemaNameOption = wait.until(elementToBeClickable(By.xpath("//li[@role='option' and normalize-space(.)='Schema Name']")));</code><br />
+            <code>schemaNameOption.click();</code>
+          </td>
+          <td>
+            Playwright’s <code>getByRole</code> becomes an XPath targeting
+            the same role + visible text in Selenium.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <code class="tag tag-await">await</code>
+            <code>page.getByRole('textbox').last().fill(schemaName)</code><br />
+            <code class="tag tag-await">await</code>
+            <code>page.keyboard.press('Enter')</code>
+          </td>
+          <td>
+            <code>WebElement valueInput = wait.until(visibilityOfElementLocated(By.cssSelector("input[role='textbox'], textarea[role='textbox']")));</code><br />
+            <code>valueInput.sendKeys(schemaName);</code><br />
+            <code>valueInput.sendKeys(Keys.ENTER);</code>
+          </td>
+          <td>
+            Filling the textbox and pressing Enter is mapped to
+            <code>sendKeys()</code> + <code>Keys.ENTER</code> in Selenium.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <code class="tag tag-await">await</code>
+            <code>page.getByRole('button', { name: 'Apply' }).click()</code><br />
+            <code class="tag tag-await">await</code>
+            <code>expect(page.locator('[data-testid="dtid_entity_title"]', { hasText: schemaName })).toBeVisible()</code><br />
+            <code class="tag tag-await">await</code>
+            <code>page.locator('[data-testid="dtid_entity_title"]', { hasText: schemaName }).click()</code>
+          </td>
+          <td>
+            <code>wait.until(elementToBeClickable(By.xpath("//button[.='Apply']"))).click();</code><br />
+            <code>WebElement schemaTile = wait.until(visibilityOfElementLocated(By.xpath("//div[@data-testid='dtid_entity_title' and .='" + schemaName + "']")));</code><br />
+            <code>schemaTile.click();</code>
+          </td>
+          <td>
+            Playwright assertion <code>toBeVisible()</code> is replaced by a
+            Selenium wait for visibility; then we reuse the same element for
+            a click.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>5. Settings: Description, Resource Group, and Labels</h2>
+
+    <table class="mapping-table">
+      <thead>
+        <tr>
+          <th>Playwright</th>
+          <th>Selenium</th>
+          <th>What to Explain</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <code class="tag tag-await">await</code>
+            <code>page.getByTestId('dtid_schema_navigation_navigation_Settings').click()</code><br />
+            <code class="tag tag-await">await</code>
+            <code>page.getByTestId('dtid_schema_description').fill('...')</code>
+          </td>
+          <td>
+            <code>WebElement settingsTab = wait.until(elementToBeClickable(By.cssSelector("[data-testid='dtid_schema_navigation_navigation_Settings']")));</code><br />
+            <code>settingsTab.click();</code><br />
+            <code>WebElement descriptionArea = wait.until(elementToBeClickable(By.cssSelector("[data-testid='dtid_schema_description']")));</code><br />
+            <code>descriptionArea.clear();</code><br />
+            <code>descriptionArea.sendKeys("This is test schema description");</code>
+          </td>
+          <td>
+            The description field is again waited-for explicitly, then cleared
+            and filled using <code>sendKeys()</code>.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <code class="tag tag-await">await</code>
+            <code>page.locator('#mui-component-select-resourceGroup').click()</code><br />
+            <code class="tag tag-await">await</code>
+            <code>page.locator(`[role="option"][data-value="${resourceGroup}"]`).click()</code>
+          </td>
+          <td>
+            <code>WebElement resourceGroupSelect = wait.until(elementToBeClickable(By.id("mui-component-select-resourceGroup")));</code><br />
+            <code>resourceGroupSelect.click();</code><br />
+            <code>WebElement resourceOption = wait.until(elementToBeClickable(By.cssSelector("[role='option'][data-value='" + resourceGroup + "']")));</code><br />
+            <code>resourceOption.click();</code>
+          </td>
+          <td>
+            Playwright’s locator is translated into Selenium CSS selectors,
+            again with explicit clickable waits.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <code class="tag tag-await">await</code>
+            <code>page.getByRole('button', { name: /\+ Add Label/i }).click()</code><br />
+            <code class="tag tag-await">await</code>
+            <code>page.getByTestId('dtid_label_name_0').fill('TestLabel1')</code><br />
+            (repeat for labels, deletes, and saves)
+          </td>
+          <td>
+            <code>WebElement addLabelButton = wait.until(elementToBeClickable(By.xpath("//button[contains(.,'+ Add Label')]")));</code><br />
+            <code>addLabelButton.click();</code><br />
+            <code>WebElement label0 = wait.until(visibilityOfElementLocated(By.cssSelector("[data-testid='dtid_label_name_0']")));</code><br />
+            <code>label0.sendKeys("TestLabel1");</code><br />
+            <em>(same pattern for other labels and delete buttons)</em>
+          </td>
+          <td>
+            Each Playwright <code>await</code> becomes a combination of
+            <strong>wait for presence/visibility/clickable</strong> plus a
+            <strong>simple WebElement action</strong> (<code>click</code> /
+            <code>sendKeys</code>) in Selenium.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>6. High-Level Talking Points for the Interview</h2>
+    <ul>
+      <li><strong>Auto-wait vs Explicit Waits</strong> – Playwright automatically waits for elements; in Selenium we must explicitly use <code>WebDriverWait</code> with conditions like <code>visibilityOfElementLocated</code> and <code>elementToBeClickable</code>.</li>
+      <li><strong>Replacing Hard Sleeps</strong> – <code>page.waitForTimeout()</code> in Playwright should be replaced with semantic waits in Selenium (wait for specific elements or states, not time).</li>
+      <li><strong>Locator Strategies</strong> – Playwright’s <code>getByTestId</code>, <code>getByRole</code>, and text locators map to Selenium <code>By.cssSelector</code>, <code>By.id</code>, and <code>By.xpath</code> with similar semantics.</li>
+      <li><strong>Structure</strong> – The asynchronous <code>async/await</code> pattern in JavaScript becomes synchronous-looking Java code, but the “waiting” responsibility is moved into <code>WebDriverWait</code> calls.</li>
+    </ul>
+    <p class="note">
+      You can open this file directly in a browser and scroll section by section while you
+      explain how each Playwright <code>await</code> corresponds to Selenium + Java.
+    </p>
+  </div>
+</body>
+</html>
+

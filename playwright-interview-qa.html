@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Playwright Interview Q&A</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f1117; color: #e2e8f0; line-height: 1.6; }
+  header { background: linear-gradient(135deg, #1e3a5f, #2d6a4f); padding: 40px 20px; text-align: center; }
+  header h1 { font-size: 2.2rem; color: #fff; letter-spacing: 1px; }
+  header p { color: #a8d8c8; margin-top: 8px; font-size: 1rem; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+  .toc { background: #1a1d2e; border: 1px solid #2d3748; border-radius: 12px; padding: 24px; margin-bottom: 36px; }
+  .toc h2 { color: #63b3ed; margin-bottom: 14px; font-size: 1.1rem; }
+  .toc ul { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 6px; }
+  .toc ul li a { color: #90cdf4; text-decoration: none; font-size: 0.88rem; padding: 4px 0; display: block; transition: color 0.2s; }
+  .toc ul li a:hover { color: #fff; }
+  .section { margin-bottom: 48px; }
+  .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; padding-bottom: 10px; border-bottom: 2px solid; }
+  .section-header.blue { border-color: #3182ce; }
+  .section-header.green { border-color: #38a169; }
+  .section-header.purple { border-color: #805ad5; }
+  .section-header.orange { border-color: #dd6b20; }
+  .section-header.red { border-color: #e53e3e; }
+  .section-header.teal { border-color: #319795; }
+  .section-header.pink { border-color: #d53f8c; }
+  .badge { padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.5px; }
+  .badge.blue { background: #2b4c7e; color: #90cdf4; }
+  .badge.green { background: #1c4532; color: #68d391; }
+  .badge.purple { background: #322659; color: #b794f4; }
+  .badge.orange { background: #652b19; color: #fbd38d; }
+  .badge.red { background: #742a2a; color: #fc8181; }
+  .badge.teal { background: #1d4044; color: #81e6d9; }
+  .badge.pink { background: #521b41; color: #fbb6ce; }
+  .section-header h2 { font-size: 1.3rem; color: #fff; }
+  .qa-card { background: #1a1d2e; border: 1px solid #2d3748; border-radius: 10px; margin-bottom: 18px; overflow: hidden; transition: border-color 0.2s; }
+  .qa-card:hover { border-color: #4a5568; }
+  .question { background: #242740; padding: 16px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .question-text { font-weight: 600; color: #e2e8f0; font-size: 0.95rem; }
+  .q-num { background: #2d3748; color: #a0aec0; font-size: 0.75rem; padding: 2px 8px; border-radius: 12px; white-space: nowrap; margin-top: 2px; }
+  .arrow { color: #718096; transition: transform 0.3s; font-size: 0.8rem; margin-top: 3px; }
+  .answer { padding: 20px; display: none; border-top: 1px solid #2d3748; }
+  .answer.open { display: block; }
+  .answer p { color: #cbd5e0; margin-bottom: 12px; font-size: 0.92rem; }
+  pre { background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 16px; overflow-x: auto; margin: 12px 0; font-size: 0.82rem; line-height: 1.7; }
+  code { font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace; color: #e6edf3; }
+  .kw { color: #ff7b72; } /* keywords */
+  .fn { color: #d2a8ff; } /* functions */
+  .str { color: #a5d6ff; } /* strings */
+  .cm { color: #8b949e; font-style: italic; } /* comments */
+  .num { color: #79c0ff; } /* numbers */
+  .prop { color: #ffa657; } /* properties */
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.88rem; }
+  th { background: #2d3748; color: #e2e8f0; padding: 10px 14px; text-align: left; }
+  td { padding: 9px 14px; border-bottom: 1px solid #2d3748; color: #cbd5e0; }
+  tr:hover td { background: #242740; }
+  .tip { background: #1a2f1a; border-left: 3px solid #38a169; padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 12px 0; font-size: 0.88rem; color: #9ae6b4; }
+  .warn { background: #2d1f00; border-left: 3px solid #dd6b20; padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 12px 0; font-size: 0.88rem; color: #fbd38d; }
+  .info { background: #1a2a3f; border-left: 3px solid #3182ce; padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 12px 0; font-size: 0.88rem; color: #90cdf4; }
+  .tag { display: inline-block; background: #2d3748; color: #a0aec0; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; margin: 2px; }
+  .expand-all { background: #2d3748; color: #e2e8f0; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; margin-bottom: 20px; transition: background 0.2s; }
+  .expand-all:hover { background: #4a5568; }
+  .search-bar { background: #1a1d2e; border: 1px solid #2d3748; border-radius: 10px; padding: 16px 20px; margin-bottom: 24px; display: flex; gap: 10px; align-items: center; }
+  .search-bar input { flex: 1; background: #0d1117; border: 1px solid #30363d; color: #e2e8f0; padding: 8px 14px; border-radius: 8px; font-size: 0.9rem; outline: none; }
+  .search-bar input:focus { border-color: #4299e1; }
+  .search-bar input::placeholder { color: #4a5568; }
+  .hidden { display: none !important; }
+  footer { text-align: center; padding: 30px; color: #4a5568; font-size: 0.85rem; border-top: 1px solid #2d3748; margin-top: 40px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🎭 Playwright Interview Q&A</h1>
+  <p>Comprehensive guide — Framework Design · Execution · Locators · Network · Coding Challenges</p>
+</header>
+
+<div class="container">
+
+  <!-- Search -->
+  <div class="search-bar">
+    <span style="color:#718096">🔍</span>
+    <input type="text" id="searchInput" placeholder="Search questions..." oninput="filterQuestions()">
+    <button class="expand-all" onclick="toggleAll()">Expand All</button>
+  </div>
+
+  <!-- TOC -->
+  <div class="toc">
+    <h2>📋 Table of Contents</h2>
+    <ul>
+      <li><a href="#framework">Framework & Design (8 questions)</a></li>
+      <li><a href="#execution">Execution & Configuration (7 questions)</a></li>
+      <li><a href="#locators">Locators & Stability (6 questions)</a></li>
+      <li><a href="#network">Network & API Handling (5 questions)</a></li>
+      <li><a href="#debugging">Debugging & CI (4 questions)</a></li>
+      <li><a href="#reporting">Reporting & Artifacts (3 questions)</a></li>
+      <li><a href="#mobile">Cross-Platform & Mobile (3 questions)</a></li>
+      <li><a href="#advanced">Advanced Playwright (5 questions)</a></li>
+      <li><a href="#coding">Logic & Coding Challenges (5 questions)</a></li>
+    </ul>
+  </div>
+
+  <!-- ===== SECTION 1: FRAMEWORK ===== -->
+  <div class="section" id="framework">
+    <div class="section-header blue">
+      <span class="badge blue">FRAMEWORK</span>
+      <h2>Framework & Design</h2>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q1. How do you structure your Playwright automation framework?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <p>A well-structured Playwright framework follows the Page Object Model (POM) pattern with separation of concerns:</p>
+        <pre><code>project/
+├── pages/                  <span class="cm"># POM classes — locators + actions</span>
+│   ├── base.page.js        <span class="cm"># common: navigate, waitFor, screenshot</span>
+│   ├── login.page.js
+│   └── dashboard.page.js
+├── tests/                  <span class="cm"># spec files only — assertions here</span>
+│   ├── login.spec.js
+│   └── dashboard.spec.js
+├── utils/                  <span class="cm"># reusable helpers</span>
+│   ├── auth-helper.js      <span class="cm"># OAuth / SSO login</span>
+│   ├── test-data-manager.js
+│   └── step-logger.js
+├── test-data/              <span class="cm"># JSON fixtures</span>
+│   └── users.json
+├── settings/               <span class="cm"># env config, setup/teardown</span>
+│   ├── env.js
+│   ├── global-setup.js
+│   └── global-teardown.js
+├── auth/                   <span class="cm"># saved storageState files</span>
+│   ├── admin.json
+│   └── viewer.json
+├── playwright.config.js
+└── .env</code></pre>
+        <div class="tip">Key principles: Pages own locators. Tests own assertions. Utils handle cross-cutting concerns. Config drives environments.</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q2. How do you handle single sign-in across multiple test cases?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <p>Use <code>storageState</code> — log in once in <code>globalSetup</code>, save the auth context, and reuse it in every test.</p>
+        <pre><code><span class="cm">// settings/global-setup.js</span>
+<span class="kw">import</span> { chromium } <span class="kw">from</span> <span class="str">'@playwright/test'</span>;
+
+<span class="kw">export default async function</span> <span class="fn">globalSetup</span>() {
+  <span class="kw">const</span> browser = <span class="kw">await</span> chromium.<span class="fn">launch</span>();
+  <span class="kw">const</span> page = <span class="kw">await</span> browser.<span class="fn">newPage</span>();
+  <span class="kw">await</span> page.<span class="fn">goto</span>(<span class="str">'https://app.example.com/login'</span>);
+  <span class="kw">await</span> page.<span class="fn">fill</span>(<span class="str">'#email'</span>, <span class="str">'user@example.com'</span>);
+  <span class="kw">await</span> page.<span class="fn">fill</span>(<span class="str">'#password'</span>, <span class="str">'Secret1!'</span>);
+  <span class="kw">await</span> page.<span class="fn">click</span>(<span class="str">'button[type=submit]'</span>);
+  <span class="kw">await</span> page.<span class="fn">waitForURL</span>(<span class="str">'**/dashboard'</span>);
+  <span class="kw">await</span> page.<span class="fn">context</span>().<span class="fn">storageState</span>({ path: <span class="str">'auth/user.json'</span> });
+  <span class="kw">await</span> browser.<span class="fn">close</span>();
+}</code></pre>
+        <pre><code><span class="cm">// playwright.config.js</span>
+<span class="kw">export default</span> {
+  globalSetup: <span class="str">'./settings/global-setup.js'</span>,
+  use: {
+    storageState: <span class="str">'auth/user.json'</span>,  <span class="cm">// ALL tests reuse this auth</span>
+  },
+};</code></pre>
+        <pre><code><span class="cm">// tests/dashboard.spec.js — no login needed!</span>
+<span class="fn">test</span>(<span class="str">'dashboard loads'</span>, <span class="kw">async</span> ({ page }) => {
+  <span class="kw">await</span> page.<span class="fn">goto</span>(<span class="str">'/dashboard'</span>);
+  <span class="kw">await</span> <span class="fn">expect</span>(page.<span class="fn">locator</span>(<span class="str">'h1'</span>)).<span class="fn">toHaveText</span>(<span class="str">'Welcome'</span>);
+});</code></pre>
+        <div class="info">storageState saves cookies, localStorage, and sessionStorage — covers most auth implementations including JWT and session-based.</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q3. Is role-based testing possible when tests run in parallel?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <p>Yes — create one <code>storageState</code> file per role and assign them to separate projects in <code>playwright.config.js</code>.</p>
+        <pre><code><span class="cm">// global-setup.js — login as each role</span>
+<span class="kw">async function</span> <span class="fn">loginAs</span>(role, email, password) {
+  <span class="kw">const</span> browser = <span class="kw">await</span> chromium.<span class="fn">launch</span>();
+  <span class="kw">const</span> page = <span class="kw">await</span> browser.<span class="fn">newPage</span>();
+  <span class="kw">await</span> page.<span class="fn">goto</span>(<span class="str">'/login'</span>);
+  <span class="kw">await</span> page.<span class="fn">fill</span>(<span class="str">'#email'</span>, email);
+  <span class="kw">await</span> page.<span class="fn">fill</span>(<span class="str">'#password'</span>, password);
+  <span class="kw">await</span> page.<span class="fn">click</span>(<span class="str">'button[type=submit]'</span>);
+  <span class="kw">await</span> page.<span class="fn">context</span>().<span class="fn">storageState</span>({ path: <span class="str">`auth/${role}.json`</span> });
+  <span class="kw">await</span> browser.<span class="fn">close</span>();
+}
+
+<span class="kw">export default async function</span> <span class="fn">globalSetup</span>() {
+  <span class="kw">await</span> <span class="fn">loginAs</span>(<span class="str">'admin'</span>,  <span class="str">'admin@app.com'</span>,  <span class="str">'AdminPass1!'</span>);
+  <span class="kw">await</span> <span class="fn">loginAs</span>(<span class="str">'viewer'</span>, <span class="str">'viewer@app.com'</span>, <span class="str">'ViewPass1!'</span>);
+  <span class="kw">await</span> <span class="fn">loginAs</span>(<span class="str">'editor'</span>, <span class="str">'editor@app.com'</span>, <span class="str">'EditorPass1!'</span>);
+}</code></pre>
+        <pre><code><span class="cm">// playwright.config.js — parallel role projects</span>
+<span class="kw">export default</span> {
+  projects: [
+    {
+      name: <span class="str">'admin-tests'</span>,
+      use: { storageState: <span class="str">'auth/admin.json'</span> },
+      testMatch: <span class="str">'**/admin/**/*.spec.js'</span>,
+    },
+    {
+      name: <span class="str">'viewer-tests'</span>,
+      use: { storageState: <span class="str">'auth/viewer.json'</span> },
+      testMatch: <span class="str">'**/viewer/**/*.spec.js'</span>,
+    },
+    {
+      name: <span class="str">'editor-tests'</span>,
+      use: { storageState: <span class="str">'auth/editor.json'</span> },
+      testMatch: <span class="str">'**/editor/**/*.spec.js'</span>,
+    },
+  ],
+};</code></pre>
+        <div class="tip">Each project worker runs in complete isolation — different cookies, different sessions, different roles, all in parallel.</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q4. Why do you prefer Playwright over Selenium or Cypress?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <table>
+          <tr><th>Feature</th><th>Playwright</th><th>Selenium</th><th>Cypress</th></tr>
+          <tr><td>Auto-wait</td><td>✅ Built-in</td><td>❌ Manual</td><td>✅ Built-in</td></tr>
+          <tr><td>Browsers</td><td>Chromium, Firefox, WebKit</td><td>All (via drivers)</td><td>Chromium + limited FF</td></tr>
+          <tr><td>Network mocking</td><td>✅ Native route()</td><td>❌ Complex</td><td>✅ cy.intercept()</td></tr>
+          <tr><td>Parallelism</td><td>✅ Per-file, workers</td><td>Grid required</td><td>Paid dashboard</td></tr>
+          <tr><td>Mobile emulation</td><td>✅ Built-in devices</td><td>⚠️ Limited</td><td>❌ No</td></tr>
+          <tr><td>Multi-tab / iframes</td><td>✅ Native</td><td>⚠️ Verbose</td><td>⚠️ Workarounds</td></tr>
+          <tr><td>Auth state reuse</td><td>✅ storageState</td><td>❌ Manual</td><td>⚠️ cy.session()</td></tr>
+          <tr><td>Languages</td><td>JS/TS/Python/Java/C#</td><td>All major</td><td>JS/TS only</td></tr>
+          <tr><td>Speed</td><td>Fast</td><td>Slow</td><td>Fast</td></tr>
+          <tr><td>Trace viewer</td><td>✅ Built-in</td><td>❌ None</td><td>✅ Time travel</td></tr>
+        </table>
+        <div class="tip">Primary reasons: storageState for auth isolation, native network interception, true WebKit support for Safari coverage, and no same-origin restriction (unlike Cypress).</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q5. What is the Page Object Model and why use it?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <p>POM encapsulates page locators and interactions into a class — tests call methods instead of writing raw selectors.</p>
+        <pre><code><span class="cm">// pages/login.page.js</span>
+<span class="kw">export class</span> <span class="fn">LoginPage</span> {
+  <span class="fn">constructor</span>(page) {
+    <span class="kw">this</span>.page = page;
+    <span class="kw">this</span>.emailInput    = page.<span class="fn">locator</span>(<span class="str">'#email'</span>);
+    <span class="kw">this</span>.passwordInput = page.<span class="fn">locator</span>(<span class="str">'#password'</span>);
+    <span class="kw">this</span>.submitBtn     = page.<span class="fn">locator</span>(<span class="str">'button[type=submit]'</span>);
+    <span class="kw">this</span>.errorMsg      = page.<span class="fn">locator</span>(<span class="str">'.error-message'</span>);
+  }
+
+  <span class="kw">async</span> <span class="fn">login</span>(email, password) {
+    <span class="kw">await</span> <span class="kw">this</span>.emailInput.<span class="fn">fill</span>(email);
+    <span class="kw">await</span> <span class="kw">this</span>.passwordInput.<span class="fn">fill</span>(password);
+    <span class="kw">await</span> <span class="kw">this</span>.submitBtn.<span class="fn">click</span>();
+    <span class="kw">await</span> <span class="kw">this</span>.page.<span class="fn">waitForURL</span>(<span class="str">'**/dashboard'</span>);
+  }
+
+  <span class="kw">async</span> <span class="fn">getError</span>() {
+    <span class="kw">return</span> <span class="kw">this</span>.errorMsg.<span class="fn">textContent</span>();
+  }
+}
+
+<span class="cm">// tests/login.spec.js</span>
+<span class="kw">import</span> { LoginPage } <span class="kw">from</span> <span class="str">'../pages/login.page.js'</span>;
+
+<span class="fn">test</span>(<span class="str">'valid login'</span>, <span class="kw">async</span> ({ page }) => {
+  <span class="kw">const</span> login = <span class="kw">new</span> <span class="fn">LoginPage</span>(page);
+  <span class="kw">await</span> login.<span class="fn">login</span>(<span class="str">'user@app.com'</span>, <span class="str">'pass123'</span>);
+  <span class="kw">await</span> <span class="fn">expect</span>(page).<span class="fn">toHaveURL</span>(<span class="str">/dashboard/</span>);
+});</code></pre>
+        <div class="info">Benefits: Locator changes require 1 update (in page class) instead of N updates across tests. Tests read like plain English.</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q6. How do you manage test data in Playwright?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <p>Three patterns depending on complexity:</p>
+        <pre><code><span class="cm">// 1. JSON fixtures (recommended for static data)</span>
+<span class="cm">// test-data/users.json</span>
+{
+  "admin": { "email": "admin@app.com", "password": "Admin1!" },
+  "viewer": { "email": "viewer@app.com", "password": "View1!" }
+}
+
+<span class="cm">// In test:</span>
+<span class="kw">import</span> users <span class="kw">from</span> <span class="str">'../test-data/users.json'</span> <span class="kw">assert</span> { type: <span class="str">'json'</span> };
+<span class="kw">await</span> login.<span class="fn">login</span>(users.admin.email, users.admin.password);</code></pre>
+        <pre><code><span class="cm">// 2. Playwright fixtures (for shared page/helper instances)</span>
+<span class="kw">import</span> { test <span class="kw">as</span> base } <span class="kw">from</span> <span class="str">'@playwright/test'</span>;
+<span class="kw">import</span> { LoginPage } <span class="kw">from</span> <span class="str">'./pages/login.page.js'</span>;
+
+<span class="kw">export const</span> test = base.<span class="fn">extend</span>({
+  loginPage: <span class="kw">async</span> ({ page }, use) => {
+    <span class="kw">await</span> <span class="fn">use</span>(<span class="kw">new</span> <span class="fn">LoginPage</span>(page));
+  },
+  testUser: <span class="kw">async</span> ({}, use) => {
+    <span class="kw">await</span> <span class="fn">use</span>({ email: <span class="str">'user@app.com'</span>, password: <span class="str">'pass'</span> });
+  },
+});
+
+<span class="cm">// In test — no imports needed, fixtures injected</span>
+test(<span class="str">'login'</span>, <span class="kw">async</span> ({ loginPage, testUser }) => {
+  <span class="kw">await</span> loginPage.<span class="fn">login</span>(testUser.email, testUser.password);
+});</code></pre>
+        <pre><code><span class="cm">// 3. API-created test data (freshest, no stale state)</span>
+<span class="kw">const</span> apiContext = <span class="kw">await</span> request.<span class="fn">newContext</span>({ baseURL: <span class="str">'https://api.app.com'</span> });
+<span class="kw">const</span> user = <span class="kw">await</span> apiContext.<span class="fn">post</span>(<span class="str">'/users'</span>, {
+  data: { name: <span class="str">'Test User'</span>, role: <span class="str">'editor'</span> }
+});
+<span class="kw">const</span> { id } = <span class="kw">await</span> user.<span class="fn">json</span>();
+<span class="cm">// cleanup after test</span>
+<span class="kw">await</span> apiContext.<span class="fn">delete</span>(<span class="str">`/users/${id}`</span>);</code></pre>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q7. What is a Playwright fixture and how is it different from a helper?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <p>Fixtures are Playwright's built-in DI system — they set up and tear down resources automatically per test.</p>
+        <pre><code><span class="cm">// fixtures/index.js</span>
+<span class="kw">import</span> { test <span class="kw">as</span> base } <span class="kw">from</span> <span class="str">'@playwright/test'</span>;
+<span class="kw">import</span> { LoginPage }     <span class="kw">from</span> <span class="str">'../pages/login.page.js'</span>;
+<span class="kw">import</span> { DashboardPage } <span class="kw">from</span> <span class="str">'../pages/dashboard.page.js'</span>;
+
+<span class="kw">export const</span> test = base.<span class="fn">extend</span>({
+  <span class="cm">// auto-login fixture — runs before each test, auto-tears down</span>
+  authenticatedPage: [<span class="kw">async</span> ({ page }, use) => {
+    <span class="kw">const</span> login = <span class="kw">new</span> <span class="fn">LoginPage</span>(page);
+    <span class="kw">await</span> login.<span class="fn">login</span>(<span class="str">'user@app.com'</span>, <span class="str">'pass'</span>);
+    <span class="kw">await</span> <span class="fn">use</span>(page);          <span class="cm">// test runs here</span>
+    <span class="kw">await</span> page.<span class="fn">close</span>();      <span class="cm">// teardown after test</span>
+  }, { auto: <span class="kw">false</span> }],
+
+  dashboard: <span class="kw">async</span> ({ page }, use) => {
+    <span class="kw">await</span> <span class="fn">use</span>(<span class="kw">new</span> <span class="fn">DashboardPage</span>(page));
+  },
+});
+
+<span class="cm">// Usage — fixtures are injected, not imported</span>
+test(<span class="str">'dashboard test'</span>, <span class="kw">async</span> ({ authenticatedPage, dashboard }) => {
+  <span class="kw">await</span> dashboard.<span class="fn">navigateTo</span>();
+});</code></pre>
+        <table>
+          <tr><th></th><th>Fixture</th><th>Helper/Utility</th></tr>
+          <tr><td>Lifecycle</td><td>Managed by Playwright (setup + teardown)</td><td>Manual — you call it</td></tr>
+          <tr><td>Injection</td><td>Auto-injected via destructuring</td><td>Import and instantiate</td></tr>
+          <tr><td>Scope</td><td>test, worker, or project</td><td>No scope concept</td></tr>
+          <tr><td>Best for</td><td>Pages, auth, DB connections</td><td>One-off utilities, formatters</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q8. How do you handle environment-specific configuration?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <pre><code><span class="cm">// settings/env.js</span>
+<span class="kw">import</span> dotenv <span class="kw">from</span> <span class="str">'dotenv'</span>;
+dotenv.<span class="fn">config</span>();
+
+<span class="kw">export class</span> <span class="fn">Env</span> {
+  <span class="kw">static get</span> <span class="prop">BASE_URL</span>()  { <span class="kw">return</span> process.env.BASE_URL  || <span class="str">'http://localhost:3000'</span>; }
+  <span class="kw">static get</span> <span class="prop">EMAIL</span>()     { <span class="kw">return</span> process.env.USER_EMAIL || <span class="str">'test@app.com'</span>; }
+  <span class="kw">static get</span> <span class="prop">PASSWORD</span>()  { <span class="kw">return</span> process.env.PASSWORD   || <span class="str">'pass123'</span>; }
+
+  <span class="kw">static get</span> <span class="prop">TIMEOUT_SHORT</span>()  { <span class="kw">return</span> <span class="num">5_000</span>; }
+  <span class="kw">static get</span> <span class="prop">TIMEOUT_MEDIUM</span>() { <span class="kw">return</span> <span class="num">15_000</span>; }
+  <span class="kw">static get</span> <span class="prop">TIMEOUT_LONG</span>()   { <span class="kw">return</span> <span class="num">30_000</span>; }
+}</code></pre>
+        <pre><code><span class="cm">// playwright.config.js — multi-env via --project flag</span>
+<span class="kw">import</span> { Env } <span class="kw">from</span> <span class="str">'./settings/env.js'</span>;
+
+<span class="kw">export default</span> {
+  use: { baseURL: Env.BASE_URL },
+  projects: [
+    { name: <span class="str">'staging'</span>,    use: { baseURL: <span class="str">'https://staging.app.com'</span> } },
+    { name: <span class="str">'production'</span>, use: { baseURL: <span class="str">'https://app.com'</span> } },
+  ],
+};</code></pre>
+        <pre><code><span class="cm"># Run against specific env</span>
+BASE_URL=https://staging.app.com npx playwright test
+npx playwright test --project=staging</code></pre>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== SECTION 2: EXECUTION ===== -->
+  <div class="section" id="execution">
+    <div class="section-header green">
+      <span class="badge green">EXECUTION</span>
+      <h2>Execution & Configuration</h2>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q9. How do you configure and execute tests in parallel?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <pre><code><span class="cm">// playwright.config.js</span>
+<span class="kw">export default</span> {
+  workers: <span class="num">4</span>,             <span class="cm">// 4 parallel workers</span>
+  fullyParallel: <span class="kw">true</span>,    <span class="cm">// tests within a file also run in parallel</span>
+  retries: <span class="num">2</span>,             <span class="cm">// retry failing tests</span>
+};</code></pre>
+        <pre><code><span class="cm"># CLI overrides</span>
+npx playwright test --workers=4
+npx playwright test --workers=50%    <span class="cm"># 50% of CPU cores</span>
+npx playwright test --fully-parallel</code></pre>
+        <pre><code><span class="cm">// Force serial execution within one describe block</span>
+test.describe.<span class="fn">serial</span>(<span class="str">'Ordered checkout flow'</span>, () => {
+  <span class="fn">test</span>(<span class="str">'add to cart'</span>, ...);
+  <span class="fn">test</span>(<span class="str">'apply coupon'</span>, ...);
+  <span class="fn">test</span>(<span class="str">'checkout'</span>, ...);
+});</code></pre>
+        <div class="warn">Parallel tests must be independent — no shared state, no shared test data that gets mutated. Use unique test data per worker.</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q10. When do you configure explicit waits in Playwright?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <p>Playwright auto-waits for actionability (visible, enabled, stable, not obscured). Explicit waits are needed for:</p>
+        <table>
+          <tr><th>Scenario</th><th>Explicit Wait</th></tr>
+          <tr><td>Wait for API call to complete</td><td><code>page.waitForResponse()</code></td></tr>
+          <tr><td>Wait for navigation</td><td><code>page.waitForURL()</code></td></tr>
+          <tr><td>Wait for element state</td><td><code>locator.waitFor({ state })</code></td></tr>
+          <tr><td>Custom JS condition</td><td><code>page.waitForFunction()</code></td></tr>
+          <tr><td>New page/popup</td><td><code>page.waitForEvent('popup')</code></td></tr>
+          <tr><td>Download</td><td><code>page.waitForEvent('download')</code></td></tr>
+        </table>
+        <pre><code><span class="cm">// Wait for API after clicking</span>
+<span class="kw">const</span> [response] = <span class="kw">await</span> Promise.<span class="fn">all</span>([
+  page.<span class="fn">waitForResponse</span>(r => r.<span class="fn">url</span>().<span class="fn">includes</span>(<span class="str">'/api/users'</span>) && r.<span class="fn">status</span>() === <span class="num">200</span>),
+  page.<span class="fn">click</span>(<span class="str">'#load-users'</span>),
+]);
+
+<span class="cm">// Wait for element visibility</span>
+<span class="kw">await</span> page.<span class="fn">locator</span>(<span class="str">'.toast'</span>).<span class="fn">waitFor</span>({ state: <span class="str">'visible'</span>, timeout: <span class="num">5000</span> });
+
+<span class="cm">// Custom JS condition</span>
+<span class="kw">await</span> page.<span class="fn">waitForFunction</span>(() => window.appReady === <span class="kw">true</span>);
+
+<span class="cm">// Wait for new popup window</span>
+<span class="kw">const</span> [popup] = <span class="kw">await</span> Promise.<span class="fn">all</span>([
+  page.<span class="fn">waitForEvent</span>(<span class="str">'popup'</span>),
+  page.<span class="fn">click</span>(<span class="str">'#open-popup'</span>),
+]);</code></pre>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q11. How do you configure explicit waits in the Playwright config file?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <pre><code><span class="cm">// playwright.config.js</span>
+<span class="kw">export default</span> {
+  timeout: <span class="num">60_000</span>,            <span class="cm">// per-test timeout (default: 30s)</span>
+
+  expect: {
+    timeout: <span class="num">5_000</span>,           <span class="cm">// expect() assertion timeout</span>
+  },
+
+  use: {
+    actionTimeout: <span class="num">10_000</span>,    <span class="cm">// click, fill, select, etc.</span>
+    navigationTimeout: <span class="num">30_000</span>, <span class="cm">// goto(), waitForURL()</span>
+  },
+};</code></pre>
+        <pre><code><span class="cm">// Per-test override</span>
+<span class="fn">test</span>(<span class="str">'slow operation'</span>, <span class="kw">async</span> ({ page }) => {
+  test.<span class="fn">setTimeout</span>(<span class="num">120_000</span>);
+  <span class="kw">await</span> page.<span class="fn">goto</span>(<span class="str">'/slow-page'</span>, { timeout: <span class="num">60_000</span> });
+  <span class="kw">await</span> <span class="fn">expect</span>(page.<span class="fn">locator</span>(<span class="str">'h1'</span>)).<span class="fn">toBeVisible</span>({ timeout: <span class="num">15_000</span> });
+});</code></pre>
+        <div class="tip">Set global timeouts conservatively. Override per-test for genuinely slow operations. Never use <code>waitForTimeout()</code> as a substitute for proper waits.</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q12. What are beforeAll, beforeEach, afterAll, afterEach and when to use each?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <pre><code>test.<span class="fn">describe</span>(<span class="str">'Product suite'</span>, () => {
+
+  <span class="cm">// Runs ONCE before all tests in this describe — use for expensive setup</span>
+  test.<span class="fn">beforeAll</span>(<span class="kw">async</span> ({ browser }) => {
+    <span class="cm">// create shared browser context, seed DB, start server</span>
+  });
+
+  <span class="cm">// Runs before EACH test — use for navigation, state reset</span>
+  test.<span class="fn">beforeEach</span>(<span class="kw">async</span> ({ page }) => {
+    <span class="kw">await</span> page.<span class="fn">goto</span>(<span class="str">'/products'</span>);
+  });
+
+  <span class="cm">// Runs after EACH test — use for cleanup, screenshots on failure</span>
+  test.<span class="fn">afterEach</span>(<span class="kw">async</span> ({ page }, testInfo) => {
+    <span class="kw">if</span> (testInfo.status !== testInfo.expectedStatus) {
+      <span class="kw">await</span> page.<span class="fn">screenshot</span>({ path: <span class="str">`fail-${testInfo.title}.png`</span> });
+    }
+  });
+
+  <span class="cm">// Runs ONCE after all tests — teardown, close connections</span>
+  test.<span class="fn">afterAll</span>(<span class="kw">async</span> () => {
+    <span class="cm">// delete test data, close DB, stop server</span>
+  });
+});</code></pre>
+        <table>
+          <tr><th>Hook</th><th>Frequency</th><th>Common Use</th></tr>
+          <tr><td>beforeAll</td><td>Once per describe</td><td>Create shared context, seed DB</td></tr>
+          <tr><td>beforeEach</td><td>Before every test</td><td>Navigate, reset state, set auth</td></tr>
+          <tr><td>afterEach</td><td>After every test</td><td>Screenshot on failure, cleanup created records</td></tr>
+          <tr><td>afterAll</td><td>Once per describe</td><td>Close connections, delete test data</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q13. How do you skip or conditionally run tests?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <pre><code><span class="cm">// Skip unconditionally</span>
+test.<span class="fn">skip</span>(<span class="str">'broken feature'</span>, <span class="kw">async</span> ({ page }) => { ... });
+
+<span class="cm">// Skip based on condition</span>
+test(<span class="str">'mobile only'</span>, <span class="kw">async</span> ({ page, isMobile }) => {
+  test.<span class="fn">skip</span>(!isMobile, <span class="str">'This test runs only on mobile'</span>);
+  ...
+});
+
+<span class="cm">// Skip entire describe on condition</span>
+test.<span class="fn">describe</span>(<span class="str">'Admin features'</span>, () => {
+  test.<span class="fn">skip</span>(process.env.ROLE !== <span class="str">'admin'</span>, <span class="str">'Admin role required'</span>);
+  ...
+});
+
+<span class="cm">// Mark as expected to fail (xfail)</span>
+test.<span class="fn">fail</span>(<span class="str">'known bug #1234'</span>, <span class="kw">async</span> ({ page }) => { ... });
+
+<span class="cm">// Run only this test (useful for debugging)</span>
+test.<span class="fn">only</span>(<span class="str">'focused test'</span>, <span class="kw">async</span> ({ page }) => { ... });
+
+<span class="cm">// Run by tag</span>
+test(<span class="str">'checkout @smoke'</span>, <span class="kw">async</span> ({ page }) => { ... });
+<span class="cm">// npx playwright test --grep @smoke</span></code></pre>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== SECTION 3: LOCATORS ===== -->
+  <div class="section" id="locators">
+    <div class="section-header purple">
+      <span class="badge purple">LOCATORS</span>
+      <h2>Locators & Stability</h2>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q14. What locator strategies does Playwright provide?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <pre><code><span class="cm">// Role-based (most resilient — mirrors accessibility tree)</span>
+page.<span class="fn">getByRole</span>(<span class="str">'button'</span>, { name: <span class="str">'Submit'</span> });
+page.<span class="fn">getByRole</span>(<span class="str">'textbox'</span>, { name: <span class="str">'Email'</span> });
+page.<span class="fn">getByRole</span>(<span class="str">'link'</span>,   { name: <span class="str">'Home'</span> });
+
+<span class="cm">// By label (for form inputs)</span>
+page.<span class="fn">getByLabel</span>(<span class="str">'Email address'</span>);
+
+<span class="cm">// By placeholder</span>
+page.<span class="fn">getByPlaceholder</span>(<span class="str">'Search...'</span>);
+
+<span class="cm">// By test ID (most stable — added by devs for testing)</span>
+page.<span class="fn">getByTestId</span>(<span class="str">'submit-btn'</span>);  <span class="cm">// data-testid="submit-btn"</span>
+
+<span class="cm">// By text content</span>
+page.<span class="fn">getByText</span>(<span class="str">'Welcome back'</span>);
+page.<span class="fn">getByText</span>(<span class="str">/welcome/i</span>);      <span class="cm">// regex, case-insensitive</span>
+
+<span class="cm">// CSS / XPath (last resort)</span>
+page.<span class="fn">locator</span>(<span class="str">'#submit-btn'</span>);
+page.<span class="fn">locator</span>(<span class="str">'xpath=//button[@type="submit"]'</span>);</code></pre>
+        <table>
+          <tr><th>Strategy</th><th>Stability</th><th>When to Use</th></tr>
+          <tr><td>getByRole</td><td>⭐⭐⭐⭐⭐</td><td>First choice — semantic, A11y aligned</td></tr>
+          <tr><td>getByTestId</td><td>⭐⭐⭐⭐⭐</td><td>When devs add data-testid attributes</td></tr>
+          <tr><td>getByLabel</td><td>⭐⭐⭐⭐</td><td>Form fields with labels</td></tr>
+          <tr><td>getByText</td><td>⭐⭐⭐</td><td>Text that won't change, buttons/links</td></tr>
+          <tr><td>CSS selector</td><td>⭐⭐</td><td>When above options fail</td></tr>
+          <tr><td>XPath</td><td>⭐</td><td>Last resort only</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q15. What do you do when a locator resolves to multiple elements?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <pre><code><span class="cm">// BAD — throws if multiple matches found</span>
+<span class="kw">await</span> page.<span class="fn">locator</span>(<span class="str">'.btn'</span>).<span class="fn">click</span>();
+
+<span class="cm">// GOOD — narrow by index</span>
+<span class="kw">await</span> page.<span class="fn">locator</span>(<span class="str">'.btn'</span>).<span class="fn">first</span>().<span class="fn">click</span>();
+<span class="kw">await</span> page.<span class="fn">locator</span>(<span class="str">'.btn'</span>).<span class="fn">last</span>().<span class="fn">click</span>();
+<span class="kw">await</span> page.<span class="fn">locator</span>(<span class="str">'.btn'</span>).<span class="fn">nth</span>(<span class="num">2</span>).<span class="fn">click</span>();   <span class="cm">// 0-indexed</span>
+
+<span class="cm">// BETTER — narrow the selector itself</span>
+<span class="kw">await</span> page.<span class="fn">locator</span>(<span class="str">'form#checkout .btn-submit'</span>).<span class="fn">click</span>();
+
+<span class="cm">// BEST — scope to parent element</span>
+<span class="kw">const</span> form = page.<span class="fn">locator</span>(<span class="str">'form#checkout'</span>);
+<span class="kw">await</span> form.<span class="fn">getByRole</span>(<span class="str">'button'</span>, { name: <span class="str">'Submit'</span> }).<span class="fn">click</span>();
+
+<span class="cm">// Count how many matches</span>
+<span class="kw">const</span> count = <span class="kw">await</span> page.<span class="fn">locator</span>(<span class="str">'.item'</span>).<span class="fn">count</span>();
+console.<span class="fn">log</span>(`Found ${count} items`);
+
+<span class="cm">// Iterate all matches</span>
+<span class="kw">for</span> (<span class="kw">const</span> item <span class="kw">of</span> <span class="kw">await</span> page.<span class="fn">locator</span>(<span class="str">'.item'</span>).<span class="fn">all</span>()) {
+  console.<span class="fn">log</span>(<span class="kw">await</span> item.<span class="fn">textContent</span>());
+}
+
+<span class="cm">// Filter from multiple — find row with specific text</span>
+<span class="kw">const</span> row = page.<span class="fn">locator</span>(<span class="str">'tr'</span>).<span class="fn">filter</span>({ hasText: <span class="str">'John Doe'</span> });
+<span class="kw">await</span> row.<span class="fn">getByRole</span>(<span class="str">'button'</span>, { name: <span class="str">'Delete'</span> }).<span class="fn">click</span>();</code></pre>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q16. Would you use force: true while interacting with elements? Why or why not?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <p><strong>Avoid it</strong> — <code>force: true</code> bypasses Playwright's actionability checks:</p>
+        <table>
+          <tr><th>Check Bypassed</th><th>Risk</th></tr>
+          <tr><td>Visibility</td><td>Clicking hidden elements — test passes but real user can't</td></tr>
+          <tr><td>Enabled state</td><td>Interacting with disabled inputs — masks bugs</td></tr>
+          <tr><td>Stability</td><td>Clicking animating elements — race condition</td></tr>
+          <tr><td>Not obscured</td><td>Click goes to wrong element under overlay</td></tr>
+        </table>
+        <pre><code><span class="cm">// AVOID</span>
+<span class="kw">await</span> page.<span class="fn">locator</span>(<span class="str">'#hidden-btn'</span>).<span class="fn">click</span>({ force: <span class="kw">true</span> });
+
+<span class="cm">// BETTER — wait for element to become interactable</span>
+<span class="kw">await</span> page.<span class="fn">locator</span>(<span class="str">'#btn'</span>).<span class="fn">waitFor</span>({ state: <span class="str">'visible'</span> });
+<span class="kw">await</span> page.<span class="fn">locator</span>(<span class="str">'#btn'</span>).<span class="fn">click</span>();
+
+<span class="cm">// Close overlay first, then click</span>
+<span class="kw">await</span> page.<span class="fn">locator</span>(<span class="str">'.modal-close'</span>).<span class="fn">click</span>();
+<span class="kw">await</span> page.<span class="fn">locator</span>(<span class="str">'#btn'</span>).<span class="fn">click</span>();
+
+<span class="cm">// Scroll into view first</span>
+<span class="kw">await</span> page.<span class="fn">locator</span>(<span class="str">'#btn'</span>).<span class="fn">scrollIntoViewIfNeeded</span>();
+<span class="kw">await</span> page.<span class="fn">locator</span>(<span class="str">'#btn'</span>).<span class="fn">click</span>();</code></pre>
+        <div class="tip">Acceptable uses: negative tests (verify disabled button ignores clicks), elements intentionally off-screen but functionally actionable (rare edge case).</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q17. How do you interact with iframes in Playwright?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <pre><code><span class="cm">// Locate frame by URL</span>
+<span class="kw">const</span> frame = page.<span class="fn">frameLocator</span>(<span class="str">'iframe[src*="payment"]'</span>);
+<span class="kw">await</span> frame.<span class="fn">getByLabel</span>(<span class="str">'Card Number'</span>).<span class="fn">fill</span>(<span class="str">'4111111111111111'</span>);
+<span class="kw">await</span> frame.<span class="fn">getByRole</span>(<span class="str">'button'</span>, { name: <span class="str">'Pay'</span> }).<span class="fn">click</span>();
+
+<span class="cm">// Nested iframes</span>
+<span class="kw">const</span> inner = page
+  .<span class="fn">frameLocator</span>(<span class="str">'#outer-frame'</span>)
+  .<span class="fn">frameLocator</span>(<span class="str">'#inner-frame'</span>);
+<span class="kw">await</span> inner.<span class="fn">locator</span>(<span class="str">'#submit'</span>).<span class="fn">click</span>();
+
+<span class="cm">// Access frame as Frame object (for more control)</span>
+<span class="kw">const</span> frameElement = <span class="kw">await</span> page.<span class="fn">$</span>(<span class="str">'iframe'</span>);
+<span class="kw">const</span> frameObj = <span class="kw">await</span> frameElement.<span class="fn">contentFrame</span>();
+<span class="kw">await</span> frameObj.<span class="fn">fill</span>(<span class="str">'#cvv'</span>, <span class="str">'123'</span>);</code></pre>
+        <div class="info">Playwright's frameLocator() chains naturally — unlike Selenium's switchTo().frame() which requires switching back manually.</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q18. How do you handle shadow DOM elements?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <pre><code><span class="cm">// Playwright CSS selectors pierce shadow DOM automatically with >>></span>
+<span class="kw">await</span> page.<span class="fn">locator</span>(<span class="str">'my-component >>> #inner-button'</span>).<span class="fn">click</span>();
+
+<span class="cm">// Using locator chaining</span>
+<span class="kw">const</span> component = page.<span class="fn">locator</span>(<span class="str">'my-custom-element'</span>);
+<span class="kw">await</span> component.<span class="fn">locator</span>(<span class="str">'#submit-btn'</span>).<span class="fn">click</span>();
+
+<span class="cm">// evaluate inside shadow root</span>
+<span class="kw">const</span> text = <span class="kw">await</span> page.<span class="fn">evaluate</span>(() => {
+  <span class="kw">const</span> host = document.<span class="fn">querySelector</span>(<span class="str">'my-component'</span>);
+  <span class="kw">return</span> host.shadowRoot.<span class="fn">querySelector</span>(<span class="str">'.label'</span>).textContent;
+});</code></pre>
+        <div class="tip">Playwright's CSS engine pierces shadow DOM by default — you rarely need special handling unlike Selenium which requires JS execution.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== SECTION 4: NETWORK ===== -->
+  <div class="section" id="network">
+    <div class="section-header orange">
+      <span class="badge orange">NETWORK</span>
+      <h2>Network & API Handling</h2>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q19. How do you perform network mocking in Playwright?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <pre><code><span class="cm">// Mock a GET response</span>
+<span class="kw">await</span> page.<span class="fn">route</span>(<span class="str">'**/api/products'</span>, <span class="kw">async</span> route => {
+  <span class="kw">await</span> route.<span class="fn">fulfill</span>({
+    status: <span class="num">200</span>,
+    contentType: <span class="str">'application/json'</span>,
+    body: JSON.<span class="fn">stringify</span>([{ id: <span class="num">1</span>, name: <span class="str">'Mock Product'</span>, price: <span class="num">99</span> }]),
+  });
+});
+
+<span class="cm">// Simulate 500 error</span>
+<span class="kw">await</span> page.<span class="fn">route</span>(<span class="str">'**/api/orders'</span>, route => route.<span class="fn">fulfill</span>({ status: <span class="num">500</span> }));
+
+<span class="cm">// Abort request (simulate offline)</span>
+<span class="kw">await</span> page.<span class="fn">route</span>(<span class="str">'**/api/analytics'</span>, route => route.<span class="fn">abort</span>());
+
+<span class="cm">// Modify request headers (inject auth token)</span>
+<span class="kw">await</span> page.<span class="fn">route</span>(<span class="str">'**/api/**'</span>, <span class="kw">async</span> route => {
+  <span class="kw">await</span> route.<span class="fn">continue</span>({
+    headers: { ...route.<span class="fn">request</span>().<span class="fn">headers</span>(), <span class="str">'Authorization'</span>: <span class="str">'Bearer test-token'</span> },
+  });
+});
+
+<span class="cm">// Assert request body (verify POST payload)</span>
+<span class="kw">await</span> page.<span class="fn">route</span>(<span class="str">'**/api/order'</span>, <span class="kw">async</span> route => {
+  <span class="kw">const</span> body = route.<span class="fn">request</span>().<span class="fn">postDataJSON</span>();
+  <span class="fn">expect</span>(body.item).<span class="fn">toBe</span>(<span class="str">'Widget'</span>);
+  <span class="fn">expect</span>(body.quantity).<span class="fn">toBe</span>(<span class="num">3</span>);
+  <span class="kw">await</span> route.<span class="fn">continue</span>();
+});
+
+<span class="cm">// Remove mock after use</span>
+<span class="kw">await</span> page.<span class="fn">unroute</span>(<span class="str">'**/api/products'</span>);</code></pre>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q20. How do you use Playwright's API testing (request context)?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <pre><code><span class="cm">// playwright.config.js</span>
+use: { baseURL: <span class="str">'https://api.app.com'</span> }
+
+<span class="cm">// In test — use built-in 'request' fixture</span>
+<span class="fn">test</span>(<span class="str">'create and verify user via API'</span>, <span class="kw">async</span> ({ request, page }) => {
+
+  <span class="cm">// CREATE via API (fast setup)</span>
+  <span class="kw">const</span> res = <span class="kw">await</span> request.<span class="fn">post</span>(<span class="str">'/users'</span>, {
+    data: { name: <span class="str">'John'</span>, email: <span class="str">'john@test.com'</span>, role: <span class="str">'admin'</span> },
+  });
+  <span class="fn">expect</span>(res.<span class="fn">status</span>()).<span class="fn">toBe</span>(<span class="num">201</span>);
+  <span class="kw">const</span> { id } = <span class="kw">await</span> res.<span class="fn">json</span>();
+
+  <span class="cm">// VERIFY in UI</span>
+  <span class="kw">await</span> page.<span class="fn">goto</span>(<span class="str">`/users/${id}`</span>);
+  <span class="kw">await</span> <span class="fn">expect</span>(page.<span class="fn">getByText</span>(<span class="str">'John'</span>)).<span class="fn">toBeVisible</span>();
+
+  <span class="cm">// CLEANUP via API (fast teardown)</span>
+  <span class="kw">await</span> request.<span class="fn">delete</span>(<span class="str">`/users/${id}`</span>);
+});</code></pre>
+        <div class="tip">API testing in Playwright is ideal for test setup/teardown — create data via API, verify in UI, clean up via API. Avoids slow UI flows for preconditions.</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q21. How do you handle file uploads and downloads?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <pre><code><span class="cm">// File Upload</span>
+<span class="kw">await</span> page.<span class="fn">locator</span>(<span class="str">'input[type=file]'</span>).<span class="fn">setInputFiles</span>(<span class="str">'./test-data/sample.pdf'</span>);
+
+<span class="cm">// Multiple files</span>
+<span class="kw">await</span> page.<span class="fn">locator</span>(<span class="str">'input[type=file]'</span>).<span class="fn">setInputFiles</span>([
+  <span class="str">'./file1.pdf'</span>,
+  <span class="str">'./file2.pdf'</span>,
+]);
+
+<span class="cm">// Upload via drag-and-drop</span>
+<span class="kw">const</span> buffer = fs.<span class="fn">readFileSync</span>(<span class="str">'./test-data/sample.json'</span>);
+<span class="kw">await</span> page.<span class="fn">locator</span>(<span class="str">'#drop-zone'</span>).<span class="fn">dispatchEvent</span>(<span class="str">'drop'</span>, {
+  dataTransfer: { files: [<span class="kw">new</span> File([buffer], <span class="str">'sample.json'</span>)] }
+});
+
+<span class="cm">// File Download</span>
+<span class="kw">const</span> [download] = <span class="kw">await</span> Promise.<span class="fn">all</span>([
+  page.<span class="fn">waitForEvent</span>(<span class="str">'download'</span>),
+  page.<span class="fn">click</span>(<span class="str">'#download-btn'</span>),
+]);
+<span class="kw">const</span> path = <span class="kw">await</span> download.<span class="fn">path</span>();
+console.<span class="fn">log</span>(<span class="str">'Downloaded to:'</span>, path);
+
+<span class="cm">// Save download to specific location</span>
+<span class="kw">await</span> download.<span class="fn">saveAs</span>(<span class="str">'./downloads/export.csv'</span>);
+
+<span class="cm">// Read content of downloaded file</span>
+<span class="kw">const</span> content = fs.<span class="fn">readFileSync</span>(path, <span class="str">'utf-8'</span>);
+<span class="fn">expect</span>(content).<span class="fn">toContain</span>(<span class="str">'John,Doe'</span>);</code></pre>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== SECTION 5: DEBUGGING ===== -->
+  <div class="section" id="debugging">
+    <div class="section-header red">
+      <span class="badge red">DEBUGGING</span>
+      <h2>Debugging & CI</h2>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q22. A test passes locally but fails in CI — how do you debug it?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <table>
+          <tr><th>Root Cause</th><th>Fix</th></tr>
+          <tr><td>Timing differences (slower CI)</td><td>Increase actionTimeout / navigationTimeout</td></tr>
+          <tr><td>Headless rendering differences</td><td>Use consistent viewport: <code>{ width: 1280, height: 720 }</code></td></tr>
+          <tr><td>Missing env vars</td><td>Verify CI secrets match local .env</td></tr>
+          <tr><td>Font/animation jank</td><td><code>page.emulateMedia({ reducedMotion: 'reduce' })</code></td></tr>
+          <tr><td>Race condition</td><td>Replace waitForTimeout with waitForResponse/waitForURL</td></tr>
+          <tr><td>Different timezone</td><td>Set TZ env var in CI</td></tr>
+          <tr><td>Screenshot/file permissions</td><td>Check CI write permissions for artifacts</td></tr>
+        </table>
+        <pre><code><span class="cm">// playwright.config.js — capture artifacts in CI</span>
+use: {
+  trace: <span class="str">'on-first-retry'</span>,       <span class="cm">// full trace on retry</span>
+  screenshot: <span class="str">'only-on-failure'</span>,  <span class="cm">// screenshot on fail</span>
+  video: <span class="str">'retain-on-failure'</span>,     <span class="cm">// video on fail</span>
+  viewport: { width: <span class="num">1280</span>, height: <span class="num">720</span> },
+},</code></pre>
+        <pre><code><span class="cm"># GitHub Actions — run with trace, upload artifacts</span>
+- name: Run Playwright tests
+  run: npx playwright test --retries=2
+- name: Upload Playwright report
+  uses: actions/upload-artifact@v3
+  if: always()
+  with:
+    name: playwright-report
+    path: playwright-report/</code></pre>
+        <pre><code><span class="cm"># View trace locally</span>
+npx playwright show-trace trace.zip
+
+<span class="cm"># Run with debug logging</span>
+DEBUG=pw:api npx playwright test</code></pre>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q23. How do you use Playwright's debugging tools?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <pre><code><span class="cm"># 1. UI Mode — visual test runner with time-travel</span>
+npx playwright test --ui
+
+<span class="cm"># 2. Debug mode — opens browser + Playwright inspector</span>
+npx playwright test --debug
+npx playwright test login.spec.js:15 --debug    <span class="cm"># specific line</span>
+
+<span class="cm"># 3. Headed mode — see browser</span>
+npx playwright test --headed
+
+<span class="cm"># 4. Slow motion — slow down each step</span>
+npx playwright test --headed --slow-mo=500</code></pre>
+        <pre><code><span class="cm">// 5. pause() — stops execution, opens Playwright Inspector</span>
+<span class="fn">test</span>(<span class="str">'debug this'</span>, <span class="kw">async</span> ({ page }) => {
+  <span class="kw">await</span> page.<span class="fn">goto</span>(<span class="str">'/dashboard'</span>);
+  <span class="kw">await</span> page.<span class="fn">pause</span>();    <span class="cm">// execution stops here</span>
+  <span class="kw">await</span> page.<span class="fn">click</span>(<span class="str">'#btn'</span>);
+});
+
+<span class="cm">// 6. Console/error listeners</span>
+page.<span class="fn">on</span>(<span class="str">'console'</span>, msg => console.<span class="fn">log</span>(<span class="str">'BROWSER:'</span>, msg.<span class="fn">text</span>()));
+page.<span class="fn">on</span>(<span class="str">'pageerror'</span>, err => console.<span class="fn">error</span>(<span class="str">'PAGE ERROR:'</span>, err));
+page.<span class="fn">on</span>(<span class="str">'requestfailed'</span>, req => console.<span class="fn">warn</span>(<span class="str">'FAILED:'</span>, req.<span class="fn">url</span>()));</code></pre>
+        <div class="tip">Playwright Inspector (--debug) lets you step through actions, inspect locators, and pick selectors interactively — far more powerful than console.log debugging.</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q24. How do you handle flaky tests in Playwright?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <pre><code><span class="cm">// 1. Configure retries</span>
+<span class="kw">export default</span> { retries: <span class="num">2</span> };  <span class="cm">// retry failed tests 2x</span>
+
+<span class="cm">// 2. Retry specific test</span>
+test(<span class="str">'flaky api test'</span>, { retries: <span class="num">3</span> }, <span class="kw">async</span> ({ page }) => { ... });
+
+<span class="cm">// 3. Replace fragile timeouts with proper waits</span>
+<span class="cm">// BAD:</span>
+<span class="kw">await</span> page.<span class="fn">waitForTimeout</span>(<span class="num">2000</span>);
+<span class="kw">await</span> page.<span class="fn">click</span>(<span class="str">'#btn'</span>);
+
+<span class="cm">// GOOD:</span>
+<span class="kw">await</span> page.<span class="fn">locator</span>(<span class="str">'#btn'</span>).<span class="fn">waitFor</span>({ state: <span class="str">'visible'</span> });
+<span class="kw">await</span> page.<span class="fn">locator</span>(<span class="str">'#btn'</span>).<span class="fn">click</span>();
+
+<span class="cm">// 4. Use expect.poll() for polling assertions</span>
+<span class="kw">await</span> <span class="fn">expect</span>.<span class="fn">poll</span>(<span class="kw">async</span> () => {
+  <span class="kw">const</span> res = <span class="kw">await</span> page.<span class="fn">request</span>.<span class="fn">get</span>(<span class="str">'/api/job-status'</span>);
+  <span class="kw">return</span> (<span class="kw">await</span> res.<span class="fn">json</span>()).status;
+}, { timeout: <span class="num">30_000</span>, intervals: [<span class="num">1000</span>, <span class="num">2000</span>, <span class="num">5000</span>] }).<span class="fn">toBe</span>(<span class="str">'complete'</span>);
+
+<span class="cm">// 5. Isolate test state — never share mutable state between tests</span></code></pre>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== SECTION 6: REPORTING ===== -->
+  <div class="section" id="reporting">
+    <div class="section-header teal">
+      <span class="badge teal">REPORTING</span>
+      <h2>Reporting & Artifacts</h2>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q25. What reporters does Playwright support?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <pre><code><span class="cm">// playwright.config.js</span>
+<span class="kw">export default</span> {
+  reporter: [
+    [<span class="str">'html'</span>],                        <span class="cm">// rich HTML report (default)</span>
+    [<span class="str">'list'</span>],                        <span class="cm">// console output, test-by-test</span>
+    [<span class="str">'dot'</span>],                         <span class="cm">// minimal dots, CI-friendly</span>
+    [<span class="str">'json'</span>, { outputFile: <span class="str">'report.json'</span> }],  <span class="cm">// machine-readable</span>
+    [<span class="str">'junit'</span>, { outputFile: <span class="str">'results.xml'</span> }], <span class="cm">// Jenkins/Azure DevOps</span>
+    [<span class="str">'allure-playwright'</span>],          <span class="cm">// Allure (3rd party)</span>
+  ],
+};</code></pre>
+        <pre><code><span class="cm"># Open HTML report</span>
+npx playwright show-report
+
+<span class="cm"># Use dot reporter in CI (less verbose)</span>
+npx playwright test --reporter=dot</code></pre>
+        <div class="info">HTML reporter includes traces, screenshots, videos, and step-by-step action logs. Run <code>npx playwright show-report</code> after tests to open it.</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q26. How do you add custom step logging to tests?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <pre><code><span class="cm">// Using test.step() — appears in HTML report and traces</span>
+<span class="fn">test</span>(<span class="str">'checkout flow'</span>, <span class="kw">async</span> ({ page }) => {
+  <span class="kw">await</span> test.<span class="fn">step</span>(<span class="str">'Navigate to product page'</span>, <span class="kw">async</span> () => {
+    <span class="kw">await</span> page.<span class="fn">goto</span>(<span class="str">'/products/widget'</span>);
+    <span class="kw">await</span> <span class="fn">expect</span>(page.<span class="fn">locator</span>(<span class="str">'h1'</span>)).<span class="fn">toHaveText</span>(<span class="str">'Widget'</span>);
+  });
+
+  <span class="kw">await</span> test.<span class="fn">step</span>(<span class="str">'Add to cart'</span>, <span class="kw">async</span> () => {
+    <span class="kw">await</span> page.<span class="fn">click</span>(<span class="str">'#add-to-cart'</span>);
+    <span class="kw">await</span> <span class="fn">expect</span>(page.<span class="fn">locator</span>(<span class="str">'.cart-count'</span>)).<span class="fn">toHaveText</span>(<span class="str">'1'</span>);
+  });
+
+  <span class="kw">await</span> test.<span class="fn">step</span>(<span class="str">'Complete checkout'</span>, <span class="kw">async</span> () => {
+    <span class="kw">await</span> page.<span class="fn">click</span>(<span class="str">'#checkout'</span>);
+    <span class="kw">await</span> page.<span class="fn">waitForURL</span>(<span class="str">'**/confirmation'</span>);
+  });
+});
+
+<span class="cm">// Custom logger utility</span>
+<span class="kw">export async function</span> <span class="fn">step</span>(name, fn) {
+  console.<span class="fn">log</span>(<span class="str">`[STEP] ${name}`</span>);
+  <span class="kw">const</span> start = Date.<span class="fn">now</span>();
+  <span class="kw">await</span> <span class="fn">fn</span>();
+  console.<span class="fn">log</span>(<span class="str">`[DONE] ${name} — ${Date.now() - start}ms`</span>);
+}</code></pre>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== SECTION 7: MOBILE ===== -->
+  <div class="section" id="mobile">
+    <div class="section-header pink">
+      <span class="badge pink">MOBILE</span>
+      <h2>Cross-Platform & Mobile</h2>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q27. Can Playwright be used to automate mobile applications?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <table>
+          <tr><th>Type</th><th>Playwright Support</th><th>Alternative</th></tr>
+          <tr><td>Mobile Web (responsive)</td><td>✅ Full — device emulation</td><td>—</td></tr>
+          <tr><td>Native iOS App</td><td>❌ Not supported</td><td>Appium + XCUITest</td></tr>
+          <tr><td>Native Android App</td><td>❌ Not supported</td><td>Appium + UIAutomator2</td></tr>
+          <tr><td>React Native App</td><td>❌ Not supported</td><td>Detox or Appium</td></tr>
+          <tr><td>Hybrid App (WebView)</td><td>⚠️ Partial — WebView only</td><td>Appium + Playwright combo</td></tr>
+        </table>
+        <pre><code><span class="cm">// playwright.config.js — emulate mobile devices</span>
+<span class="kw">import</span> { devices } <span class="kw">from</span> <span class="str">'@playwright/test'</span>;
+
+<span class="kw">export default</span> {
+  projects: [
+    { name: <span class="str">'Desktop Chrome'</span>, use: { ...devices[<span class="str">'Desktop Chrome'</span>] } },
+    { name: <span class="str">'iPhone 13'</span>,      use: { ...devices[<span class="str">'iPhone 13'</span>] } },
+    { name: <span class="str">'Pixel 5'</span>,        use: { ...devices[<span class="str">'Pixel 5'</span>] } },
+    { name: <span class="str">'iPad Pro'</span>,       use: { ...devices[<span class="str">'iPad Pro 11'</span>] } },
+  ],
+};</code></pre>
+        <pre><code><span class="cm">// Custom device config</span>
+use: {
+  viewport: { width: <span class="num">390</span>, height: <span class="num">844</span> },
+  userAgent: <span class="str">'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X)...'</span>,
+  hasTouch: <span class="kw">true</span>,
+  isMobile: <span class="kw">true</span>,
+  deviceScaleFactor: <span class="num">3</span>,
+}</code></pre>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== SECTION 8: ADVANCED ===== -->
+  <div class="section" id="advanced">
+    <div class="section-header blue">
+      <span class="badge blue">ADVANCED</span>
+      <h2>Advanced Playwright</h2>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q28. How do you handle multi-tab and popup windows?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <pre><code><span class="cm">// Handle new tab opened by clicking a link</span>
+<span class="kw">const</span> [newPage] = <span class="kw">await</span> Promise.<span class="fn">all</span>([
+  page.<span class="fn">context</span>().<span class="fn">waitForEvent</span>(<span class="str">'page'</span>),  <span class="cm">// wait for new tab</span>
+  page.<span class="fn">click</span>(<span class="str">'a[target=_blank]'</span>),       <span class="cm">// click that opens it</span>
+]);
+<span class="kw">await</span> newPage.<span class="fn">waitForLoadState</span>();
+console.<span class="fn">log</span>(<span class="kw">await</span> newPage.<span class="fn">title</span>());
+
+<span class="cm">// Handle popup window (window.open)</span>
+<span class="kw">const</span> [popup] = <span class="kw">await</span> Promise.<span class="fn">all</span>([
+  page.<span class="fn">waitForEvent</span>(<span class="str">'popup'</span>),
+  page.<span class="fn">click</span>(<span class="str">'#open-popup'</span>),
+]);
+<span class="kw">await</span> popup.<span class="fn">fill</span>(<span class="str">'#otp'</span>, <span class="str">'123456'</span>);
+<span class="kw">await</span> popup.<span class="fn">click</span>(<span class="str">'#submit'</span>);
+<span class="kw">await</span> popup.<span class="fn">close</span>();
+
+<span class="cm">// Switch between open pages</span>
+<span class="kw">const</span> pages = page.<span class="fn">context</span>().<span class="fn">pages</span>();
+<span class="kw">await</span> pages[<span class="num">1</span>].<span class="fn">bringToFront</span>();   <span class="cm">// switch to tab 2</span></code></pre>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q29. How do you run Playwright tests in GitHub Actions CI?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <pre><code><span class="cm"># .github/workflows/playwright.yml</span>
+name: Playwright Tests
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Playwright tests
+        run: npx playwright test
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
+          USER_EMAIL: ${{ secrets.USER_EMAIL }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+
+      - name: Upload Playwright Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30</code></pre>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q30. What is page.evaluate() and when do you use it?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <pre><code><span class="cm">// Execute JS in browser context — returns result to Node</span>
+
+<span class="cm">// Read localStorage</span>
+<span class="kw">const</span> token = <span class="kw">await</span> page.<span class="fn">evaluate</span>(() => localStorage.<span class="fn">getItem</span>(<span class="str">'auth-token'</span>));
+
+<span class="cm">// Set localStorage (bypass login for fast setup)</span>
+<span class="kw">await</span> page.<span class="fn">evaluate</span>(token => localStorage.<span class="fn">setItem</span>(<span class="str">'auth-token'</span>, token), <span class="str">'my-token'</span>);
+
+<span class="cm">// Scroll to bottom of page</span>
+<span class="kw">await</span> page.<span class="fn">evaluate</span>(() => window.<span class="fn">scrollTo</span>(<span class="num">0</span>, document.body.scrollHeight));
+
+<span class="cm">// Read computed CSS property</span>
+<span class="kw">const</span> color = <span class="kw">await</span> page.<span class="fn">evaluate</span>(() => {
+  <span class="kw">const</span> el = document.<span class="fn">querySelector</span>(<span class="str">'#header'</span>);
+  <span class="kw">return</span> window.<span class="fn">getComputedStyle</span>(el).<span class="fn">getPropertyValue</span>(<span class="str">'background-color'</span>);
+});
+
+<span class="cm">// Trigger custom events</span>
+<span class="kw">await</span> page.<span class="fn">evaluate</span>(() => {
+  document.<span class="fn">querySelector</span>(<span class="str">'#input'</span>).<span class="fn">dispatchEvent</span>(<span class="kw">new</span> <span class="fn">Event</span>(<span class="str">'change'</span>));
+});
+
+<span class="cm">// evaluateHandle — returns ElementHandle (for DOM node)</span>
+<span class="kw">const</span> handle = <span class="kw">await</span> page.<span class="fn">evaluateHandle</span>(() => document.body);</code></pre>
+        <div class="warn">Avoid overusing evaluate() — prefer Playwright's built-in locators. Use evaluate() when no native API covers the scenario (localStorage, custom events, computed styles).</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== SECTION 9: CODING ===== -->
+  <div class="section" id="coding">
+    <div class="section-header green">
+      <span class="badge green">CODING</span>
+      <h2>Logic & Coding Challenges</h2>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q31. Replace each character in a string with the next alphabetical character</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <pre><code><span class="kw">function</span> <span class="fn">shiftChars</span>(str) {
+  <span class="kw">return</span> str
+    .<span class="fn">split</span>(<span class="str">''</span>)
+    .<span class="fn">map</span>(char => {
+      <span class="kw">if</span> (char === <span class="str">'z'</span>) <span class="kw">return</span> <span class="str">'a'</span>;          <span class="cm">// wrap lowercase</span>
+      <span class="kw">if</span> (char === <span class="str">'Z'</span>) <span class="kw">return</span> <span class="str">'A'</span>;          <span class="cm">// wrap uppercase</span>
+      <span class="kw">if</span> (<span class="str">/[a-zA-Z]/</span>.<span class="fn">test</span>(char)) {
+        <span class="kw">return</span> String.<span class="fn">fromCharCode</span>(char.<span class="fn">charCodeAt</span>(<span class="num">0</span>) + <span class="num">1</span>);
+      }
+      <span class="kw">return</span> char;  <span class="cm">// non-alpha unchanged</span>
+    })
+    .<span class="fn">join</span>(<span class="str">''</span>);
+}
+
+console.<span class="fn">log</span>(<span class="fn">shiftChars</span>(<span class="str">'Hello'</span>));    <span class="cm">// "Ifmmp"</span>
+console.<span class="fn">log</span>(<span class="fn">shiftChars</span>(<span class="str">'xyz'</span>));      <span class="cm">// "yza"</span>
+console.<span class="fn">log</span>(<span class="fn">shiftChars</span>(<span class="str">'aZ9!'</span>));     <span class="cm">// "bA9!"</span>
+console.<span class="fn">log</span>(<span class="fn">shiftChars</span>(<span class="str">'Hello World 123!'</span>));  <span class="cm">// "Ifmmp Xpsme 123!"</span></code></pre>
+        <div class="info">Key insight: charCodeAt() + 1 shifts the character. Handle 'z'→'a' and 'Z'→'A' wrapping separately. Non-alphabetic characters pass through unchanged.</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q32. Fetch mobile price from two websites and return the cheapest</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <pre><code><span class="kw">import</span> { chromium } <span class="kw">from</span> <span class="str">'@playwright/test'</span>;
+
+<span class="kw">async function</span> <span class="fn">getPrice</span>(browser, siteName, url, selector) {
+  <span class="kw">const</span> page = <span class="kw">await</span> browser.<span class="fn">newPage</span>();
+  <span class="kw">try</span> {
+    <span class="kw">await</span> page.<span class="fn">goto</span>(url, { waitUntil: <span class="str">'domcontentloaded'</span>, timeout: <span class="num">30_000</span> });
+    <span class="kw">const</span> priceText = <span class="kw">await</span> page.<span class="fn">locator</span>(selector).<span class="fn">first</span>().<span class="fn">textContent</span>();
+    <span class="kw">const</span> price = <span class="fn">parseFloat</span>(priceText.<span class="fn">replace</span>(<span class="str">/[^0-9.]/g</span>, <span class="str">''</span>));
+    console.<span class="fn">log</span>(<span class="str">`${siteName}: $${price}`</span>);
+    <span class="kw">return</span> { site: siteName, price };
+  } <span class="kw">catch</span> (e) {
+    console.<span class="fn">error</span>(<span class="str">`Failed to get price from ${siteName}:`, e.message</span>);
+    <span class="kw">return</span> { site: siteName, price: <span class="kw">Infinity</span> };
+  } <span class="kw">finally</span> {
+    <span class="kw">await</span> page.<span class="fn">close</span>();
+  }
+}
+
+<span class="kw">async function</span> <span class="fn">getCheapestPrice</span>() {
+  <span class="kw">const</span> browser = <span class="kw">await</span> chromium.<span class="fn">launch</span>();
+
+  <span class="kw">const</span> sites = [
+    { name: <span class="str">'Amazon'</span>,  url: <span class="str">'https://amazon.com/dp/PRODUCT_ID'</span>,   selector: <span class="str">'.a-price-whole'</span> },
+    { name: <span class="str">'BestBuy'</span>, url: <span class="str">'https://bestbuy.com/site/PRODUCT_ID'</span>, selector: <span class="str">'.priceView-customer-price span'</span> },
+  ];
+
+  <span class="cm">// Fetch both prices in parallel</span>
+  <span class="kw">const</span> results = <span class="kw">await</span> Promise.<span class="fn">all</span>(
+    sites.<span class="fn">map</span>(s => <span class="fn">getPrice</span>(browser, s.name, s.url, s.selector))
+  );
+
+  <span class="kw">await</span> browser.<span class="fn">close</span>();
+
+  <span class="kw">const</span> cheapest = results.<span class="fn">reduce</span>((min, curr) =>
+    curr.price < min.price ? curr : min
+  );
+
+  console.<span class="fn">log</span>(<span class="str">`\n🏆 Cheapest: ${cheapest.site} at $${cheapest.price}`</span>);
+  <span class="kw">return</span> cheapest;
+}
+
+<span class="fn">getCheapestPrice</span>();
+<span class="cm">// Amazon: $1199.99</span>
+<span class="cm">// BestBuy: $1249.99</span>
+<span class="cm">// Cheapest: Amazon at $1199.99</span></code></pre>
+        <div class="tip">Key: open pages in parallel with Promise.all(), handle errors gracefully (return Infinity on failure so they never win), always close pages in finally block.</div>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q33. Write a Playwright test to verify a table has correct data</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <pre><code><span class="fn">test</span>(<span class="str">'user table shows correct data'</span>, <span class="kw">async</span> ({ page }) => {
+  <span class="kw">await</span> page.<span class="fn">goto</span>(<span class="str">'/users'</span>);
+
+  <span class="cm">// Assert row count</span>
+  <span class="kw">await</span> <span class="fn">expect</span>(page.<span class="fn">locator</span>(<span class="str">'table tbody tr'</span>)).<span class="fn">toHaveCount</span>(<span class="num">5</span>);
+
+  <span class="cm">// Assert specific cell value</span>
+  <span class="kw">const</span> firstRow = page.<span class="fn">locator</span>(<span class="str">'table tbody tr'</span>).<span class="fn">first</span>();
+  <span class="kw">await</span> <span class="fn">expect</span>(firstRow.<span class="fn">locator</span>(<span class="str">'td'</span>).<span class="fn">nth</span>(<span class="num">0</span>)).<span class="fn">toHaveText</span>(<span class="str">'John Doe'</span>);
+  <span class="kw">await</span> <span class="fn">expect</span>(firstRow.<span class="fn">locator</span>(<span class="str">'td'</span>).<span class="fn">nth</span>(<span class="num">1</span>)).<span class="fn">toHaveText</span>(<span class="str">'admin'</span>);
+
+  <span class="cm">// Find row by content and assert sibling cell</span>
+  <span class="kw">const</span> janeRow = page.<span class="fn">locator</span>(<span class="str">'tr'</span>).<span class="fn">filter</span>({ hasText: <span class="str">'Jane Smith'</span> });
+  <span class="kw">await</span> <span class="fn">expect</span>(janeRow.<span class="fn">locator</span>(<span class="str">'td[data-col=role]'</span>)).<span class="fn">toHaveText</span>(<span class="str">'viewer'</span>);
+
+  <span class="cm">// Extract all values from a column</span>
+  <span class="kw">const</span> names = <span class="kw">await</span> page.<span class="fn">locator</span>(<span class="str">'table tbody tr td:first-child'</span>).<span class="fn">allTextContents</span>();
+  <span class="fn">expect</span>(names).<span class="fn">toContain</span>(<span class="str">'John Doe'</span>);
+
+  <span class="cm">// Assert table headers</span>
+  <span class="kw">await</span> <span class="fn">expect</span>(page.<span class="fn">locator</span>(<span class="str">'th'</span>)).<span class="fn">toHaveText</span>([<span class="str">'Name'</span>, <span class="str">'Role'</span>, <span class="str">'Status'</span>, <span class="str">'Actions'</span>]);
+});</code></pre>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q34. How would you implement a retry wrapper for flaky Playwright actions?</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <pre><code><span class="cm">// utils/retry.js</span>
+<span class="kw">export async function</span> <span class="fn">withRetry</span>(fn, { retries = <span class="num">3</span>, delay = <span class="num">1000</span>, name = <span class="str">'action'</span> } = {}) {
+  <span class="kw">let</span> lastError;
+  <span class="kw">for</span> (<span class="kw">let</span> attempt = <span class="num">1</span>; attempt <= retries; attempt++) {
+    <span class="kw">try</span> {
+      <span class="kw">return</span> <span class="kw">await</span> <span class="fn">fn</span>();
+    } <span class="kw">catch</span> (err) {
+      lastError = err;
+      console.<span class="fn">warn</span>(<span class="str">`[Retry ${attempt}/${retries}] ${name}: ${err.message}`</span>);
+      <span class="kw">if</span> (attempt < retries) <span class="kw">await</span> <span class="kw">new</span> <span class="fn">Promise</span>(r => <span class="fn">setTimeout</span>(r, delay));
+    }
+  }
+  <span class="kw">throw</span> lastError;
+}
+
+<span class="cm">// Usage</span>
+<span class="kw">await</span> <span class="fn">withRetry</span>(
+  () => page.<span class="fn">locator</span>(<span class="str">'.dynamic-element'</span>).<span class="fn">click</span>(),
+  { retries: <span class="num">3</span>, delay: <span class="num">500</span>, name: <span class="str">'click dynamic element'</span> }
+);
+
+<span class="cm">// expect.poll() — Playwright's built-in polling assertion</span>
+<span class="kw">await</span> <span class="fn">expect</span>.<span class="fn">poll</span>(<span class="kw">async</span> () => {
+  <span class="kw">return</span> <span class="kw">await</span> page.<span class="fn">locator</span>(<span class="str">'.status'</span>).<span class="fn">textContent</span>();
+}, {
+  message: <span class="str">'Status should become Complete'</span>,
+  timeout: <span class="num">30_000</span>,
+  intervals: [<span class="num">1000</span>, <span class="num">2000</span>, <span class="num">5000</span>]
+}).<span class="fn">toBe</span>(<span class="str">'Complete'</span>);</code></pre>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="question" onclick="toggle(this)">
+        <span class="question-text">Q35. Write a test using Playwright to handle a date picker</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="answer">
+        <pre><code><span class="cm">// Approach 1: Direct input fill (fastest if input is text type)</span>
+<span class="kw">await</span> page.<span class="fn">locator</span>(<span class="str">'input[type=date]'</span>).<span class="fn">fill</span>(<span class="str">'2024-12-25'</span>);  <span class="cm">// YYYY-MM-DD</span>
+
+<span class="cm">// Approach 2: Click through calendar UI</span>
+<span class="kw">await</span> page.<span class="fn">locator</span>(<span class="str">'#date-picker-input'</span>).<span class="fn">click</span>();  <span class="cm">// open calendar</span>
+
+<span class="cm">// Navigate to correct month</span>
+<span class="kw">await</span> page.<span class="fn">getByLabel</span>(<span class="str">'Next month'</span>).<span class="fn">click</span>();
+
+<span class="cm">// Click specific day</span>
+<span class="kw">await</span> page.<span class="fn">locator</span>(<span class="str">'.calendar-day'</span>).<span class="fn">filter</span>({ hasText: <span class="str">'25'</span> }).<span class="fn">click</span>();
+
+<span class="cm">// Approach 3: Set via evaluate (bypasses UI, most reliable)</span>
+<span class="kw">await</span> page.<span class="fn">evaluate</span>(() => {
+  <span class="kw">const</span> input = document.<span class="fn">querySelector</span>(<span class="str">'#date-input'</span>);
+  input.value = <span class="str">'2024-12-25'</span>;
+  input.<span class="fn">dispatchEvent</span>(<span class="kw">new</span> <span class="fn">Event</span>(<span class="str">'change'</span>, { bubbles: <span class="kw">true</span> }));
+  input.<span class="fn">dispatchEvent</span>(<span class="kw">new</span> <span class="fn">Event</span>(<span class="str">'input'</span>,  { bubbles: <span class="kw">true</span> }));
+});
+
+<span class="cm">// Verify date was set</span>
+<span class="kw">await</span> <span class="fn">expect</span>(page.<span class="fn">locator</span>(<span class="str">'#date-input'</span>)).<span class="fn">toHaveValue</span>(<span class="str">'2024-12-25'</span>);
+
+<span class="cm">// Keyboard input (for text-based date pickers)</span>
+<span class="kw">await</span> page.<span class="fn">locator</span>(<span class="str">'#date-input'</span>).<span class="fn">press</span>(<span class="str">'Control+A'</span>);
+<span class="kw">await</span> page.<span class="fn">locator</span>(<span class="str">'#date-input'</span>).<span class="fn">type</span>(<span class="str">'12/25/2024'</span>);</code></pre>
+        <div class="tip">Approach 1 (fill) works for standard HTML date inputs. Use evaluate() approach 3 for custom JS date pickers that don't respond to fill().</div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<footer>
+  Playwright Interview Q&A — 35 Questions · Framework · Execution · Locators · Network · Debugging · Coding
+</footer>
+
+<script>
+  let allExpanded = false;
+
+  function toggle(questionEl) {
+    const answer = questionEl.nextElementSibling;
+    const arrow = questionEl.querySelector('.arrow');
+    const isOpen = answer.classList.contains('open');
+    answer.classList.toggle('open', !isOpen);
+    arrow.textContent = isOpen ? '▶' : '▼';
+    arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(0deg)';
+  }
+
+  function toggleAll() {
+    allExpanded = !allExpanded;
+    document.querySelectorAll('.answer').forEach(a => {
+      a.classList.toggle('open', allExpanded);
+    });
+    document.querySelectorAll('.arrow').forEach(a => {
+      a.textContent = allExpanded ? '▼' : '▶';
+    });
+    document.querySelector('.expand-all').textContent = allExpanded ? 'Collapse All' : 'Expand All';
+  }
+
+  function filterQuestions() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    document.querySelectorAll('.qa-card').forEach(card => {
+      const text = card.textContent.toLowerCase();
+      card.classList.toggle('hidden', q.length > 1 && !text.includes(q));
+    });
+    // Show/hide section headers if all cards in section are hidden
+    document.querySelectorAll('.section').forEach(section => {
+      const visible = [...section.querySelectorAll('.qa-card')].some(c => !c.classList.contains('hidden'));
+      section.classList.toggle('hidden', !visible);
+    });
+  }
+</script>
+</body>
+</html>
